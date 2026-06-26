@@ -12,14 +12,15 @@ public class RegisterRequest {
 
 @NotBlank
 private String fullName;
-@Email
-@NotNull
+@NotBlank(message = "Email is required")
+@Email(message = "Invalid email format")
 private String email;
 @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Invalid phone number")
 private String phoneNumber;
 @NotBlank
 @Size(min = 8, message = "Password must be at least 8 characters long")
 private String password;
+@NotNull
 private Role role;
 private String profileImageUrl;
 
