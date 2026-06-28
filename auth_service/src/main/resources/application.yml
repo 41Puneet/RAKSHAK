@@ -37,6 +37,6 @@ management:
         include: health,info
 
 jwt:
-  secret: YOUR_SUPER_SECRET_KEY_AT_LEAST_32_CHARACTERS_LONG
+  secret: bgeurb2389234bfeurbq4b24ubqfqu34b332nfewugiw942infwuirt4301ej
   access-token-expiration: 900000
   refresh-token-expiration: 604800000
