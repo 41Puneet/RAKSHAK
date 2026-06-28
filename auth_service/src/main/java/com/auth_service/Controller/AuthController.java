@@ -2,15 +2,18 @@ package com.auth_service.Controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import java.util.UUID;
+import com.auth_service.DTO.Response.AuthResponse;
 import com.auth_service.DTO.request.LoginRequest;
+import com.auth_service.DTO.request.LogoutRequest;
 import com.auth_service.DTO.request.RegisterRequest;
 import com.auth_service.Service.AuthService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -22,16 +25,17 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest){
+    public ResponseEntity<AuthResponse> registerUser(@RequestBody @Valid RegisterRequest registerRequest){
         return new ResponseEntity<>(authService.registerUser(registerRequest), HttpStatus.CREATED);
     }
-    @PostMapping("/logout/{token}")
-    public ResponseEntity<Void> logout(@PathVariable String token){
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestBody LogoutRequest token){
         authService.logout(token);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest loginRequest){
         return new ResponseEntity<>(authService.login(loginRequest), HttpStatus.OK);
     }
+    
 }

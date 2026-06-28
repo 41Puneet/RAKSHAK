@@ -1,26 +1,34 @@
 package com.auth_service.ServiceImpl;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+
 import java.util.UUID;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.auth_service.DTO.Response.AuthResponse;
 import com.auth_service.DTO.request.LoginRequest;
+import com.auth_service.DTO.request.LogoutRequest;
 import com.auth_service.DTO.request.RegisterRequest;
 import com.auth_service.Entity.RefreshToken;
 import com.auth_service.Entity.User;
+import com.auth_service.Enums.AccountStatus;
 import com.auth_service.Repository.RefreshTokenRepository;
 import com.auth_service.Repository.UserRepository;
-import com.auth_service.Service.Auth_Service;
+import com.auth_service.Service.AuthService;
 import com.auth_service.security.CustomUserDetailsService;
 import com.auth_service.security.JwtService;
 
-public class AuthServiceImpl implements Auth_Service{
+import jakarta.transaction.Transactional;
+
+
+@Service
+@Transactional
+public class AuthServiceImpl implements AuthService{
 
 private final UserRepository userRepository;
 private final AuthenticationManager authenticationManager;
@@ -56,13 +64,13 @@ public AuthServiceImpl(UserRepository userRepository,AuthenticationManager authe
         UserDetails userDetails=customUserDetailsService.loadUserByUsername(loginRequest.getEmail());
         String accessToken=jwtService.generateAccessToken(userDetails);
         RefreshToken refreshToken=createRefreshToken(user.getId());
-        AuthResponse auth=new AuthResponse(accessToken, refreshToken.getToken(), null, jwtService.extractExpiration(accessToken).getTime(), user.getFullName(), user.getId(), user.getRole());
+        AuthResponse auth=new AuthResponse(accessToken, refreshToken.getToken(), "Bearer", jwtService.extractExpiration(accessToken).getTime(), user.getFullName(), user.getId(), user.getRole());
         return auth;
     }
 
     @Override
-    public void logout(String token) {
-        RefreshToken refreshToken=refreshTokenRepository.findByToken(token).orElseThrow(()->new IllegalArgumentException("Token not found:"+token));
+    public void logout(LogoutRequest token) {
+        RefreshToken refreshToken=refreshTokenRepository.findByToken(token.getToken()).orElseThrow(()->new IllegalArgumentException("Token not found:"+token));
         refreshTokenRepository.delete(refreshToken);
     }
 
@@ -74,8 +82,8 @@ public AuthServiceImpl(UserRepository userRepository,AuthenticationManager authe
        if(emailExists){
         throw new IllegalArgumentException("User already registered with this email:"+registerRequest.getEmail());
        }
-       Optional<User> userByPhone = userRepository.findByPhoneNumber(registerRequest.getPhoneNumber());
-       if(userByPhone.isPresent()){
+       boolean userByPhone = userRepository.existsByPhoneNumber(registerRequest.getPhoneNumber());
+       if(userByPhone){
         throw new IllegalArgumentException("User already present with this phone number:"+registerRequest.getPhoneNumber());
        }
        User user1=new User();
@@ -84,10 +92,12 @@ public AuthServiceImpl(UserRepository userRepository,AuthenticationManager authe
        user1.setPhoneNumber(registerRequest.getPhoneNumber());
        user1.setPasswordHash(passwordEncoder.encode(registerRequest.getPassword()));
        user1.setRole(registerRequest.getRole());
+       user1.setAccountStatus(AccountStatus.ACTIVE);
        user1.setProfileImageUrl(registerRequest.getProfileImageUrl());
        User saved=userRepository.save(user1);
         return mapToResponseDTO(saved);
     }
+   
      private RefreshToken createRefreshToken(UUID userId) {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setUserId(userId);
@@ -107,7 +117,7 @@ public AuthServiceImpl(UserRepository userRepository,AuthenticationManager authe
         AuthResponse auth =new AuthResponse();
         auth.setAccessToken(accessToken);
         auth.setRefreshToken(refreshToken.getToken());
-        auth.setTokenType(null);
+        auth.setTokenType("Bearer");
         auth.setUserId(user.getId());
         auth.setRole(user.getRole());
         return auth;
