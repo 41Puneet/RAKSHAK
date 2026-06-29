@@ -41,7 +41,6 @@ private EmergencyRequest emergencyRequest;
     }
     public ResponderAssignment(UUID id,UUID responderId,LocalDateTime assignedAt,LocalDateTime acceptedAt,AssignmentStatus status){
         this.id=id;
-        
         this.responderId=responderId;
         this.assignedAt=assignedAt;
         this.acceptedAt=acceptedAt;

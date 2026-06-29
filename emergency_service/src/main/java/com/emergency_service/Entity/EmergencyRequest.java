@@ -42,6 +42,7 @@ public class EmergencyRequest {
     @Column(nullable=false)
     private UUID userId;
     @Enumerated(EnumType.STRING)
+    @Column(nullable=false)
     private EmergencyType emergencyType;
     private String description;
     @Enumerated(EnumType.STRING)
@@ -51,12 +52,15 @@ public class EmergencyRequest {
     @Column(nullable=false)
     private Double longitude;
     private String address;
+    @Column(nullable=false)
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private UUID responderId;
     private UUID hospitalId;
     @Enumerated(EnumType.STRING)
+    @Column(nullable=false)
     private Priority priority;
+    @Column(nullable=false)
     private boolean isActive;
 
 
@@ -163,13 +167,37 @@ public class EmergencyRequest {
     public void setActive(boolean isActive) {
         this.isActive = isActive;
     }
+ 
+
+    public List<EmergencyImage> getImages() {
+        return images;
+    }
+    public void setImages(List<EmergencyImage> images) {
+        this.images = images;
+    }
+    public List<ResponderAssignment> getAssignments() {
+        return assignments;
+    }
+    public void setAssignments(List<ResponderAssignment> assignments) {
+        this.assignments = assignments;
+    }
+    public List<EmergencyLocationHistory> getLocationHistory() {
+        return locationHistory;
+    }
+    public void setLocationHistory(List<EmergencyLocationHistory> locationHistory) {
+        this.locationHistory = locationHistory;
+    }
+
+
     @OneToMany(mappedBy="emergencyRequest",cascade=CascadeType.ALL,orphanRemoval=true,fetch=FetchType.LAZY)
 private List<EmergencyImage> images=new ArrayList<>();
+
 
 @OneToMany(
     mappedBy = "emergencyRequest",
     cascade = CascadeType.ALL,
-    orphanRemoval = true
+    orphanRemoval = true,
+    fetch = FetchType.LAZY
 )
 private List<ResponderAssignment> assignments = new ArrayList<>();
 
@@ -179,5 +207,6 @@ private List<ResponderAssignment> assignments = new ArrayList<>();
     orphanRemoval = true,
     fetch = FetchType.LAZY
 )
+
 private List<EmergencyLocationHistory> locationHistory = new ArrayList<>();
 }
