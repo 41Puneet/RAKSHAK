@@ -70,6 +70,7 @@ public class EmergencyRequest {
         this.description=description;
         this.status=status;
         this.latitude=latitude;
+        this.hospitalId=hospitalId;
         this.longitude=longitude;
         this.address=address;
         this.createdAt=createdAt;

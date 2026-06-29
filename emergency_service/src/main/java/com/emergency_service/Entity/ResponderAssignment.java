@@ -3,7 +3,7 @@ package com.emergency_service.Entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.emergency_service.Enums.Status;
+import com.emergency_service.Enums.AssignmentStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,16 +30,16 @@ public class ResponderAssignment {
     private LocalDateTime assignedAt;
     private LocalDateTime acceptedAt;
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private AssignmentStatus status;
     @ManyToOne(fetch = FetchType.LAZY)
-@JoinColumn(name = "emergency_id")
+@JoinColumn(name = "emergency_id", nullable = false)
 private EmergencyRequest emergencyRequest;
 
 
     public ResponderAssignment(){
 
     }
-    public ResponderAssignment(UUID id,UUID responderId,LocalDateTime assignedAt,LocalDateTime acceptedAt,Status status){
+    public ResponderAssignment(UUID id,UUID responderId,LocalDateTime assignedAt,LocalDateTime acceptedAt,AssignmentStatus status){
         this.id=id;
         
         this.responderId=responderId;
@@ -57,6 +57,15 @@ private EmergencyRequest emergencyRequest;
     public UUID getResponderId() {
         return responderId;
     }
+    public void setStatus(AssignmentStatus status) {
+        this.status = status;
+    }
+    public EmergencyRequest getEmergencyRequest() {
+        return emergencyRequest;
+    }
+    public void setEmergencyRequest(EmergencyRequest emergencyRequest) {
+        this.emergencyRequest = emergencyRequest;
+    }
     public void setResponderId(UUID responderId) {
         this.responderId = responderId;
     }
@@ -71,12 +80,6 @@ private EmergencyRequest emergencyRequest;
     }
     public void setAcceptedAt(LocalDateTime acceptedAt) {
         this.acceptedAt = acceptedAt;
-    }
-    public Status getStatus() {
-        return status;
-    }
-    public void setStatus(Status status) {
-        this.status = status;
     }
     
 }

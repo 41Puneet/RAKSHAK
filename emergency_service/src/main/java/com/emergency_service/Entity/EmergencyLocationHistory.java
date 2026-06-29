@@ -23,25 +23,23 @@ public class EmergencyLocationHistory {
     @GeneratedValue(strategy=GenerationType.UUID)
     private UUID id;
     @Column(nullable=false)
-    private UUID emergencyId;
-    @Column(nullable=false)
     private Double latitude;
     @Column(nullable=false)
     private Double longitude;
-    private LocalDateTime timeStamp;
+    private LocalDateTime recorderAt;
     @ManyToOne(fetch = FetchType.LAZY)
-@JoinColumn(name = "emergency_id")
+@JoinColumn(name = "emergency_id",nullable=false)
 private EmergencyRequest emergencyRequest;
 
     public EmergencyLocationHistory(){
 
     }
-    public EmergencyLocationHistory(UUID id,UUID emergencyId,Double latitude,Double longitude,LocalDateTime timestamp){
+    public EmergencyLocationHistory(UUID id,Double latitude,Double longitude,LocalDateTime recorderAt,EmergencyRequest emergencyRequest){
         this.id=id;
-        this.emergencyId=emergencyId;
         this.latitude=latitude;
         this.longitude=longitude;
-        this.timeStamp=timestamp;
+        this.recorderAt=recorderAt;
+        this.emergencyRequest=emergencyRequest;
     }
     public UUID getId() {
         return id;
@@ -49,14 +47,14 @@ private EmergencyRequest emergencyRequest;
     public void setId(UUID id) {
         this.id = id;
     }
-    public UUID getEmergencyId() {
-        return emergencyId;
-    }
-    public void setEmergencyId(UUID emergencyId) {
-        this.emergencyId = emergencyId;
-    }
     public Double getLatitude() {
         return latitude;
+    }
+    public EmergencyRequest getEmergencyRequest() {
+        return emergencyRequest;
+    }
+    public void setEmergencyRequest(EmergencyRequest emergencyRequest) {
+        this.emergencyRequest = emergencyRequest;
     }
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
@@ -67,11 +65,11 @@ private EmergencyRequest emergencyRequest;
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
-    public LocalDateTime getTimeStamp() {
-        return timeStamp;
+    public LocalDateTime getRecorderAt() {
+        return recorderAt;
     }
-    public void setTimeStamp(LocalDateTime timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setRecorderAt(LocalDateTime recorderAt) {
+        this.recorderAt = recorderAt;
     }
     
 }
