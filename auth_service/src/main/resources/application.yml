@@ -8,7 +8,7 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/auth_service
-    username: postgres
+    username: puneetagnihotri
     password:
     driver-class-name: org.postgresql.Driver
 
@@ -40,3 +40,12 @@ jwt:
   secret: bgeurb2389234bfeurbq4b24ubqfqu34b332nfewugiw942infwuirt4301ej
   access-token-expiration: 900000
   refresh-token-expiration: 604800000
+
+
+
+
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE

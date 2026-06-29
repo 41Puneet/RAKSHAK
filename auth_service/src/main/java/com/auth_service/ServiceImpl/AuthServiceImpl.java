@@ -1,7 +1,6 @@
 package com.auth_service.ServiceImpl;
 
 import java.time.LocalDateTime;
-
 import java.util.UUID;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -78,6 +77,7 @@ public AuthServiceImpl(UserRepository userRepository,AuthenticationManager authe
 
     @Override
     public AuthResponse registerUser(RegisterRequest registerRequest) {
+        
        boolean emailExists = userRepository.existsByEmail(registerRequest.getEmail());
        if(emailExists){
         throw new IllegalArgumentException("User already registered with this email:"+registerRequest.getEmail());
@@ -95,7 +95,11 @@ public AuthServiceImpl(UserRepository userRepository,AuthenticationManager authe
        user1.setAccountStatus(AccountStatus.ACTIVE);
        user1.setProfileImageUrl(registerRequest.getProfileImageUrl());
        User saved=userRepository.save(user1);
+       System.out.println(registerRequest.getEmail());
+System.out.println(registerRequest.getPhoneNumber());
+System.out.println(registerRequest.getRole());
         return mapToResponseDTO(saved);
+
     }
    
      private RefreshToken createRefreshToken(UUID userId) {

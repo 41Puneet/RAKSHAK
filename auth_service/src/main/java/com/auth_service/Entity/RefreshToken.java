@@ -25,7 +25,7 @@ private String token;
 @NotNull
 private UUID userId;
 
-@NotBlank
+
 private LocalDateTime expiryDate;
 
 private boolean revoked;
