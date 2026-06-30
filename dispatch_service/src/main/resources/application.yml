@@ -1,0 +1,69 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: dispatch-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/emergency_db
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    listener:
+      simple:
+        acknowledge-mode: auto
+        concurrency: 3
+        max-concurrency: 10
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+# 🟢 Eureka Client Config
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+
+# 🔥 Resilience4j (for fault tolerance)
+resilience4j:
+  retry:
+    instances:
+      dispatchRetry:
+        max-attempts: 3
+        wait-duration: 2s
+
+  circuitbreaker:
+    instances:
+      responderServiceCB:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+
+# Logging (important for debugging distributed systems)
+logging:
+  level:
+    root: INFO
+    com.emergency_service: DEBUG
