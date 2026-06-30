@@ -16,6 +16,7 @@ import java.util.List;
 
 public interface EmergencyRepository extends JpaRepository<EmergencyRequest, UUID> {
     Optional<EmergencyRequest>findByEmergencyId(UUID id);
+    
     Optional<EmergencyRequest>findByUserId(UUID userId);
 
     Page<EmergencyRequest>findByStatus(Status status,Pageable pageable);

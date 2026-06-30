@@ -1,0 +1,16 @@
+package com.emergency_service.event.constant;
+
+public class RabbitMQconstant {
+    private RabbitMQconstant() {
+        // Prevent instantiation
+    }
+
+    // Exchange
+    public static final String EMERGENCY_EXCHANGE = "emergency.exchange";
+
+    // Queue
+    public static final String EMERGENCY_CREATED_QUEUE = "emergency.created.queue";
+
+    // Routing Key
+    public static final String EMERGENCY_CREATED_ROUTING_KEY = "emergency.created";
+}

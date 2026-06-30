@@ -16,7 +16,7 @@ public class EmergencyResponseDTO {
     private Double latitude;
     private Double longitude;
     private String address;
-    private UUID responserId;
+    private UUID responderId;
     private UUID hospitalId;
     private Priority priority;
     private String description;
@@ -28,7 +28,7 @@ public class EmergencyResponseDTO {
     public EmergencyResponseDTO(){
 
     }
-    public EmergencyResponseDTO(UUID emergencyId,UUID userId,EmergencyType emergencyType,Status status,Double latitude,Double longitude,String address,UUID responserId,UUID hospitalId,Priority priority,String description,LocalDateTime createdAt,LocalDateTime updatedAt,Boolean active){
+    public EmergencyResponseDTO(UUID emergencyId,UUID userId,EmergencyType emergencyType,Status status,Double latitude,Double longitude,String address,UUID responderId,UUID hospitalId,Priority priority,String description,LocalDateTime createdAt,LocalDateTime updatedAt,Boolean active){
     this.emergencyId=emergencyId;
     this.userId=userId;
     this.emergencyType=emergencyType;
@@ -36,7 +36,7 @@ public class EmergencyResponseDTO {
     this.latitude=latitude;
     this.longitude=longitude;
     this.address=address;
-    this.responserId=responserId;
+    this.responderId=responderId;
     this.hospitalId=hospitalId;
     this.priority=priority;
     this.description=description;
@@ -86,11 +86,11 @@ public class EmergencyResponseDTO {
     public void setAddress(String address) {
         this.address = address;
     }
-    public UUID getResponserId() {
-        return responserId;
+    public UUID getResponderId() {
+        return responderId;
     }
-    public void setResponserId(UUID responserId) {
-        this.responserId = responserId;
+    public void setResponderId(UUID responderId) {
+        this.responderId = responderId;
     }
     public UUID getHospitalId() {
         return hospitalId;
