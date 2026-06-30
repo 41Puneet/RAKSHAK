@@ -1,5 +1,7 @@
 package com.emergency_service.Repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +12,7 @@ import com.emergency_service.Enums.AssignmentStatus;
 
 
 public interface ResponderAssignmentRepository extends JpaRepository<ResponderAssignment, UUID> {
-    Optional<ResponderAssignment>findByResponderId (UUID id);
+    Page<ResponderAssignment>findByResponderId (UUID id,Pageable pageable);
     Optional<ResponderAssignment>findByEmergencyRequestEmergencyId(UUID emergencyId);
     List<ResponderAssignment>findByStatus(AssignmentStatus status);
 }

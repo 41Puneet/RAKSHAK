@@ -17,19 +17,19 @@ import java.util.List;
 public interface EmergencyRepository extends JpaRepository<EmergencyRequest, UUID> {
     Optional<EmergencyRequest>findByEmergencyId(UUID id);
     
-    Optional<EmergencyRequest>findByUserId(UUID userId);
+    Page<EmergencyRequest>findByUserId(UUID userId,Pageable pageable);
 
     Page<EmergencyRequest>findByStatus(Status status,Pageable pageable);
 
     Page<EmergencyRequest>findByPriority(Priority priority,Pageable pageable);
 
-    Page<EmergencyRequest>findByCreatedAtBetween(LocalDateTime startTime,LocalDateTime endTime);
+    Page<EmergencyRequest>findByCreatedAtBetween(LocalDateTime startTime,LocalDateTime endTime,Pageable pageable);
 
     Page<EmergencyRequest>findByIsActiveTrue(boolean isActive,Pageable pageable);
 
     boolean existsByEmergencyId(UUID emergencyId);
 
-    List<EmergencyRequest> findByEmergencyType(EmergencyType emergencyType);
+    Page<EmergencyRequest> findByEmergencyType(EmergencyType emergencyType,Pageable pageable);
     @Query("""
 SELECT e
 FROM EmergencyRequest e
