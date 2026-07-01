@@ -1,30 +1,35 @@
 package com.dispatch_service.ServiceImpl;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import java.util.List;
 
+import org.springframework.stereotype.Service;
+import com.dispatch_service.Service.GeoService;
 import com.dispatch_service.Entity.ResponderLocation;
 import com.dispatch_service.Repository.ResponderLocationRepository;
 import com.dispatch_service.Service.ResponderSelectionService;
 
 
+@Service
 public class ResponderSelectionServiceImpl implements ResponderSelectionService {
 
-    private final GeoServiceImpl geoServiceImpl;
+    private final GeoService geoService;
     private final ResponderLocationRepository responderLocationRepository;
 
-    public ResponderSelectionServiceImpl(GeoServiceImpl geoServiceImpl, ResponderLocationRepository responderLocationRepository) {
-        this.geoServiceImpl = geoServiceImpl;
+    public ResponderSelectionServiceImpl(GeoService geoService, ResponderLocationRepository responderLocationRepository) {
+        this.geoService = geoService;
         this.responderLocationRepository = responderLocationRepository;
     }
 
     @Override
     public ResponderLocation findNearestAvailableResponder(Double latitude, Double longitude) {
-        Page<ResponderLocation> availableResponder = responderLocationRepository.findByIsAvailableTrue(PageRequest.of(0, 1));
+        List<ResponderLocation> availableResponder = responderLocationRepository.findByIsAvailableTrue();
+        if (availableResponder.isEmpty()) {
+    return null;
+}
         ResponderLocation bestResponder = null;
         double bestDistance = Double.MAX_VALUE;
         for (ResponderLocation responder : availableResponder) {
-            double distance = geoServiceImpl.calculateDistance(latitude, longitude, responder.getLatitude(), responder.getLongitude());
+            double distance = geoService.calculateDistance(latitude, longitude, responder.getLatitude(), responder.getLongitude());
             if (distance < bestDistance) {
                 bestDistance = distance;
                 bestResponder = responder;

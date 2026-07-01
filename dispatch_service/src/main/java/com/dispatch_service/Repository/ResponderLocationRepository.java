@@ -1,13 +1,11 @@
 package com.dispatch_service.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import com.dispatch_service.Entity.ResponderLocation;
 
 import jakarta.transaction.Transactional;
@@ -21,10 +19,13 @@ import feign.Param;
 public interface ResponderLocationRepository extends JpaRepository<ResponderLocation, UUID> {
     
 
-    Page<ResponderLocation>findByIsAvailableTrue(Pageable pageable);
+    List<ResponderLocation>findByIsAvailableTrue();
 
     Optional<ResponderLocation>findByResponderId(UUID responderId);
 
+   
+   @Modifying
+   @Transactional
     @Query("""
 UPDATE ResponderLocation r
 SET r.isAvailable = :status
