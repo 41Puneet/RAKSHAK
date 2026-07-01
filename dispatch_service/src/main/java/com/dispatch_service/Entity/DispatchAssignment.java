@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.dispatch_service.Enums.AssignmentStatus;
+import com.dispatch_service.Enums.Priority;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,17 +41,19 @@ public class DispatchAssignment {
     @Enumerated(EnumType.STRING)
     private AssignmentStatus status = AssignmentStatus.ASSIGNED;
     private LocalDateTime assignedAt;
-
+    @Enumerated(EnumType.STRING)
+    private Priority priority;
     public DispatchAssignment(){
 
     }
-    public DispatchAssignment(UUID id,UUID emergencyId,UUID responderId,Double distanceKm,AssignmentStatus status,LocalDateTime assignedAt){
+    public DispatchAssignment(UUID id,UUID emergencyId,UUID responderId,Double distanceKm,AssignmentStatus status,LocalDateTime assignedAt,Priority priority){
         this.id=id;
         this.emergencyId=emergencyId;
         this.responderId=responderId;
         this.distanceKm=distanceKm;
         this.status=status;
         this.assignedAt=assignedAt;
+        this.priority=priority;
     }
     public UUID getId() {
         return id;
@@ -88,9 +91,16 @@ public class DispatchAssignment {
     public void setAssignedAt(LocalDateTime assignedAt) {
         this.assignedAt = assignedAt;
     }
+    
     @PrePersist
 public void prePersist() {
     this.assignedAt = LocalDateTime.now();
 }
+    public Priority getPriority() {
+        return priority;
+    }
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
     
 }
