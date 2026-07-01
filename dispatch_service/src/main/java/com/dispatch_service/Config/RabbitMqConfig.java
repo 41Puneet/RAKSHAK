@@ -31,11 +31,28 @@ public Queue responderAssignedQueue(){
 @Bean
 public Binding responderAssignedBinding(Queue responderAssignedQueue,TopicExchange emergencyExchange){
     return BindingBuilder.bind(responderAssignedQueue)
-    .to(emergencyExchange())
+    .to(emergencyExchange)
     .with(RabbitMqConstant.RESPONDER_ASSIGNED_ROUTING_KEY);
 }
 @Bean
 public MessageConverter messageConverter(){
     return new Jackson2JsonMessageConverter();
+}
+
+@Bean
+public Queue emergencyCreatedQueue() {
+    return QueueBuilder
+            .durable(RabbitMqConstant.EMERGENCY_CREATED_QUEUE)
+            .build();
+}
+
+@Bean
+public Binding emergencyCreatedBinding(
+        Queue emergencyCreatedQueue,
+        TopicExchange emergencyExchange) {
+
+    return BindingBuilder.bind(emergencyCreatedQueue)
+            .to(emergencyExchange)
+            .with(RabbitMqConstant.EMERGENCY_CREATED_ROUTING_KEY);
 }
 }

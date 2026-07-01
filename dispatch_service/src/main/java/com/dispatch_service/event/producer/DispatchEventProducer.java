@@ -22,5 +22,6 @@ public class DispatchEventProducer {
                 RabbitMqConstant.RESPONDER_ASSIGNED_ROUTING_KEY,
                 event
         );
+        System.out.println("Publishing responder assigned event: " + event);
     }
 }

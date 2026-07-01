@@ -1,7 +1,10 @@
 package com.dispatch_service.ServiceImpl;
 
+import org.springframework.stereotype.Service;
+
 import com.dispatch_service.Service.GeoService;
 
+@Service
 public class GeoServiceImpl implements GeoService{
 
     @Override

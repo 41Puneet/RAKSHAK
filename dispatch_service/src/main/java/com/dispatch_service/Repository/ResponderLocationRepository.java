@@ -12,7 +12,7 @@ import jakarta.transaction.Transactional;
 
 import java.util.Optional;
 
-import feign.Param;
+import org.springframework.data.repository.query.Param;
 
 
 
@@ -34,4 +34,12 @@ WHERE r.responderId = :id
 int updateAvailability(
         @Param("id") UUID id,
         @Param("status") boolean status);
-}
+
+
+@Query("""
+        SELECT r FROM ResponderLocation r WHERE r.isAvailable=true AND r.latitude BETWEEN  :minLat AND :maxLat AND r.longitude BETWEEN :minLon AND :maxLon
+        """)
+        List<ResponderLocation>findAvailableRespondersInBoundingBox(
+            @Param("minLat")Double minLat,@Param("maxLat")Double maxLat,@Param("minLon")Double minLon,@Param("maxLon")Double maxLon
+        );
+}      

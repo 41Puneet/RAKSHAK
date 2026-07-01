@@ -6,12 +6,13 @@ spring:
     name: dispatch-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/emergency_db
-    username: postgres
-    password: root
+    url: jdbc:postgresql://localhost:5432/emergency_service
+    username: puneetagnihotri
+    password: 
     driver-class-name: org.postgresql.Driver
 
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     show-sql: true

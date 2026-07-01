@@ -29,21 +29,21 @@ public class DispatchServiceImpl implements DispatchService{
 
     private final ResponderSelectionService responderSelectionService;
     private final GeoService geoService;
+    private final DispatchMapper dispatchMapper;
     private final DispatchEventProducer dispatchEventProducer;
     private final DispatchAssignmentRepository dispatchAssignmentRepository;
     private final DispatchLogRepository dispatchLogRepository;
     private final ResponderLocationRepository responderLocationRepository;
-    private final DispatchMapper dispatchMapper;
     
 
     public DispatchServiceImpl(ResponderSelectionService responderSelectionService,GeoService geoService,DispatchEventProducer dispatchEventProducer,DispatchAssignmentRepository dispatchAssignmentRepository,ResponderLocationRepository responderLocationRepository,DispatchLogRepository dispatchLogRepository,DispatchMapper dispatchMapper) {
         this.responderSelectionService = responderSelectionService;
         this.geoService = geoService;
+        this.dispatchMapper = dispatchMapper;
         this.dispatchEventProducer = dispatchEventProducer;
         this.dispatchAssignmentRepository = dispatchAssignmentRepository;
         this.responderLocationRepository = responderLocationRepository;
         this.dispatchLogRepository = dispatchLogRepository;
-        this.dispatchMapper = dispatchMapper;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class DispatchServiceImpl implements DispatchService{
 }
      double distance=geoService.calculateDistance(event.getLatitude(), event.getLongitude(), responder.getLatitude(), responder.getLongitude());
 
-     DispatchAssignment assignment=dispatchMapper.toDispatchAssignment(event);
+     DispatchAssignment assignment = toDispatchAssignment(event);
      assignment.setResponderId(responder.getResponderId());
      assignment.setDistanceKm(distance);
      assignment.setStatus(AssignmentStatus.ASSIGNED);
@@ -68,7 +68,7 @@ public class DispatchServiceImpl implements DispatchService{
      dispatchAssignmentRepository.save(assignment);
      responderLocationRepository.updateAvailability(responder.getResponderId(), false);
      saveDispatchLog(event.getEmergencyId(), "Responder assigned successfully");
-     ResponderAssignedEvent assignedEvent=dispatchMapper.toResponderAssignedEvent(assignment);
+     ResponderAssignedEvent assignedEvent = toResponderAssignedEvent(assignment);
      dispatchEventProducer.publishResponderAssigned(assignedEvent);
     }
 
@@ -78,5 +78,32 @@ log.setEmergencyId(emergencyId);
 log.setMessage(message);
 log.setTimestamp(LocalDateTime.now());
 dispatchLogRepository.save(log);
+}
+
+private DispatchAssignment toDispatchAssignment(EmergencyCreatedEvent event) {
+    if (event == null) {
+        return null;
+    }
+
+    DispatchAssignment assignment = new DispatchAssignment();
+    assignment.setEmergencyId(event.getEmergencyId());
+    assignment.setPriority(event.getPriority());
+    return assignment;
+}
+
+private ResponderAssignedEvent toResponderAssignedEvent(DispatchAssignment assignment) {
+    if (assignment == null) {
+        return null;
+    }
+
+    ResponderAssignedEvent event = new ResponderAssignedEvent();
+    event.setEmergencyId(assignment.getEmergencyId());
+    event.setResponderId(assignment.getResponderId());
+    if (assignment.getDistanceKm() != null) {
+        event.setDistanceKm(assignment.getDistanceKm());
+    }
+    event.setStatus(assignment.getStatus() != null ? assignment.getStatus() : AssignmentStatus.ASSIGNED);
+    event.setAssignedAt(assignment.getAssignedAt());
+    return event;
 }
 }

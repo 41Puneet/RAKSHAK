@@ -7,6 +7,7 @@ import com.dispatch_service.Entity.DispatchAssignment;
 import com.dispatch_service.event.model.EmergencyCreatedEvent;
 import com.dispatch_service.event.model.ResponderAssignedEvent;
 
+
 @Mapper(componentModel = "spring")
 public interface DispatchMapper {
 
@@ -18,5 +19,4 @@ public interface DispatchMapper {
     DispatchAssignment toDispatchAssignment(EmergencyCreatedEvent event);
 
     ResponderAssignedEvent toResponderAssignedEvent(DispatchAssignment assignment);
-
 }
