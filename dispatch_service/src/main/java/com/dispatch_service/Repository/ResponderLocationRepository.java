@@ -7,8 +7,14 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
 import com.dispatch_service.Entity.ResponderLocation;
+
+import jakarta.transaction.Transactional;
+
 import java.util.Optional;
+
+import feign.Param;
 
 
 
@@ -19,7 +25,12 @@ public interface ResponderLocationRepository extends JpaRepository<ResponderLoca
 
     Optional<ResponderLocation>findByResponderId(UUID responderId);
 
- @Modifying
-@Query("UPDATE ResponderLocation r SET r.isAvailable = :status WHERE r.responderId = :id")
-void updateAvailability(UUID id, boolean status);
+    @Query("""
+UPDATE ResponderLocation r
+SET r.isAvailable = :status
+WHERE r.responderId = :id
+""")
+int updateAvailability(
+        @Param("id") UUID id,
+        @Param("status") boolean status);
 }
