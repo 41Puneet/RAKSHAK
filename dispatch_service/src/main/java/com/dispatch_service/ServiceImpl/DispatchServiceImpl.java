@@ -1,6 +1,7 @@
 package com.dispatch_service.ServiceImpl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -9,7 +10,6 @@ import com.dispatch_service.Entity.DispatchAssignment;
 import com.dispatch_service.Entity.DispatchLog;
 import com.dispatch_service.Entity.ResponderLocation;
 import com.dispatch_service.Enums.AssignmentStatus;
-import com.dispatch_service.Mapper.DispatchMapper;
 import com.dispatch_service.Repository.DispatchAssignmentRepository;
 import com.dispatch_service.Repository.DispatchLogRepository;
 import com.dispatch_service.Repository.ResponderLocationRepository;
@@ -29,17 +29,17 @@ public class DispatchServiceImpl implements DispatchService{
 
     private final ResponderSelectionService responderSelectionService;
     private final GeoService geoService;
-    private final DispatchMapper dispatchMapper;
+    // private final DispatchMapper dispatchMapper;
     private final DispatchEventProducer dispatchEventProducer;
     private final DispatchAssignmentRepository dispatchAssignmentRepository;
     private final DispatchLogRepository dispatchLogRepository;
     private final ResponderLocationRepository responderLocationRepository;
     
 
-    public DispatchServiceImpl(ResponderSelectionService responderSelectionService,GeoService geoService,DispatchEventProducer dispatchEventProducer,DispatchAssignmentRepository dispatchAssignmentRepository,ResponderLocationRepository responderLocationRepository,DispatchLogRepository dispatchLogRepository,DispatchMapper dispatchMapper) {
+    public DispatchServiceImpl(ResponderSelectionService responderSelectionService,GeoService geoService,DispatchEventProducer dispatchEventProducer,DispatchAssignmentRepository dispatchAssignmentRepository,ResponderLocationRepository responderLocationRepository,DispatchLogRepository dispatchLogRepository) {
         this.responderSelectionService = responderSelectionService;
         this.geoService = geoService;
-        this.dispatchMapper = dispatchMapper;
+        // this.dispatchMapper = dispatchMapper;
         this.dispatchEventProducer = dispatchEventProducer;
         this.dispatchAssignmentRepository = dispatchAssignmentRepository;
         this.responderLocationRepository = responderLocationRepository;
@@ -60,6 +60,29 @@ public class DispatchServiceImpl implements DispatchService{
 }
      double distance=geoService.calculateDistance(event.getLatitude(), event.getLongitude(), responder.getLatitude(), responder.getLongitude());
 
+     System.out.println("Emergency Location:");
+System.out.println("Latitude = " + event.getLatitude());
+System.out.println("Longitude = " + event.getLongitude());
+
+System.out.println("Bounding Box:");
+System.out.println("MinLat = " + event.getLatitude());
+System.out.println("MaxLat = " + responder.getLatitude());
+System.out.println("MinLon = " + event.getLongitude());
+System.out.println("MaxLon = " + responder.getLongitude());
+
+List<ResponderLocation> availableResponder =
+        responderLocationRepository.findAvailableRespondersInBoundingBox(
+                event.getLatitude(), responder.getLatitude(), event.getLongitude(), responder.getLongitude());
+
+System.out.println("Responders Found = " + availableResponder.size());
+
+for (ResponderLocation r : availableResponder) {
+    System.out.println(
+        r.getResponderId() + " " +
+        r.getLatitude() + "," +
+        r.getLongitude()
+    );
+}
      DispatchAssignment assignment = toDispatchAssignment(event);
      assignment.setResponderId(responder.getResponderId());
      assignment.setDistanceKm(distance);
