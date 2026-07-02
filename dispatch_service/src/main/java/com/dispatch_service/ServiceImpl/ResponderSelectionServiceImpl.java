@@ -23,29 +23,61 @@ public class ResponderSelectionServiceImpl implements ResponderSelectionService 
     }
 
     @Override
-    public ResponderLocation findNearestAvailableResponder(Double latitude, Double longitude) {
-        double latDelta=SEARCH_RADIUS_KM/KM_PER_DEGREE;
-        double lonDelta=SEARCH_RADIUS_KM/(KM_PER_DEGREE*Math.cos(Math.toRadians(latitude)));
-        double minLat=latitude-latDelta;
-        double maxLat=latitude+latDelta;
+public ResponderLocation findNearestAvailableResponder(Double latitude, Double longitude) {
 
-        double minLon=longitude-lonDelta;
-        double maxLon=longitude+lonDelta;
+    System.out.println("Emergency Location : " + latitude + "," + longitude);
 
-        List<ResponderLocation> availableResponder = responderLocationRepository.findAvailableRespondersInBoundingBox(minLat, maxLat, minLon, maxLon);
-        if (availableResponder.isEmpty()) {
-    return null;
-}
-        ResponderLocation bestResponder = null;
-        double bestDistance = Double.MAX_VALUE;
-        for (ResponderLocation responder : availableResponder) {
-            double distance = geoService.calculateDistance(latitude, longitude, responder.getLatitude(), responder.getLongitude());
-            if (distance < bestDistance) {
-                bestDistance = distance;
-                bestResponder = responder;
-            }
-        }
-        return bestResponder;
+    double latDelta = SEARCH_RADIUS_KM / KM_PER_DEGREE;
+    double lonDelta = SEARCH_RADIUS_KM /
+            (KM_PER_DEGREE * Math.cos(Math.toRadians(latitude)));
+
+    double minLat = latitude - latDelta;
+    double maxLat = latitude + latDelta;
+
+    double minLon = longitude - lonDelta;
+    double maxLon = longitude + lonDelta;
+
+    System.out.println("Bounding Box");
+    System.out.println(minLat);
+    System.out.println(maxLat);
+    System.out.println(minLon);
+    System.out.println(maxLon);
+
+    List<ResponderLocation> availableResponder =
+            responderLocationRepository.findAvailableRespondersInBoundingBox(
+                    minLat,
+                    maxLat,
+                    minLon,
+                    maxLon);
+
+    System.out.println("Responders Found : " + availableResponder.size());
+
+    if (availableResponder.isEmpty()) {
+        return null;
     }
-    
+
+    ResponderLocation bestResponder = null;
+    double bestDistance = Double.MAX_VALUE;
+
+    for (ResponderLocation responder : availableResponder) {
+
+        double distance = geoService.calculateDistance(
+                latitude,
+                longitude,
+                responder.getLatitude(),
+                responder.getLongitude());
+
+        System.out.println(
+                responder.getResponderId() + " distance = " + distance);
+
+        if (distance < bestDistance) {
+            bestDistance = distance;
+            bestResponder = responder;
+        }
+    }
+
+    System.out.println("Selected : " + bestResponder.getResponderId());
+
+    return bestResponder;
+}
 }
