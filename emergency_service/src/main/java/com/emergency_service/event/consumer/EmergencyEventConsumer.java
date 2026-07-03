@@ -29,8 +29,6 @@ public class EmergencyEventConsumer {
     public void receiveResponderAssigned(ResponderAssignedEvent event) {
 
         emergencyRepository.findById(event.getEmergencyId()).ifPresent(emergency -> {
-
-            // Update EmergencyRequest
             emergency.setResponderId(event.getResponderId());
             emergency.setStatus(Status.ASSIGNED);
             emergency.setUpdatedAt(event.getAssignedAt());
@@ -38,7 +36,6 @@ public class EmergencyEventConsumer {
 
             emergencyRepository.save(emergency);
 
-            // Save responder assignment
             ResponderAssignment assignment = new ResponderAssignment();
             assignment.setEmergencyRequest(emergency);
             assignment.setResponderId(event.getResponderId());

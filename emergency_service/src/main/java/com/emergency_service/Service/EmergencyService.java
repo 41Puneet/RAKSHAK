@@ -6,7 +6,7 @@ import com.emergency_service.DTO.Response.EmergencyResponseDTO;
 import com.emergency_service.DTO.Request.EmergencyImageRequestDTO;
 
 public interface EmergencyService {
-   EmergencyResponseDTO createEmergency(EmergencyRequestDTO dto);
+   EmergencyResponseDTO createEmergency(EmergencyRequestDTO dto,UUID userId);
 
 EmergencyResponseDTO cancelEmergency(UUID emergencyId);
 
