@@ -37,4 +37,14 @@ public class RabbitMQConfig {
     public MessageConverter messageConverter(){
         return new Jackson2JsonMessageConverter();
     }
+@Bean
+    public Queue responderAssignedQueue(){
+        return QueueBuilder.durable(RabbitMQconstant.RESPONDER_ASSIGNED_QUEUE).build();
+    }
+@Bean
+    public Binding responderAssignedBinding(Queue responderAssignedQueue,TopicExchange emergencyExchange){
+        return BindingBuilder.bind(responderAssignedQueue)
+                .to(emergencyExchange)
+                .with(RabbitMQconstant.RESPONDER_ASSIGNED_ROUTING_KEY);
+    }
 }

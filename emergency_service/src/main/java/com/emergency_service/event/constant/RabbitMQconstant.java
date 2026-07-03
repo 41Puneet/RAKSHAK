@@ -17,6 +17,6 @@ public class RabbitMQconstant {
     public static final String RESPONDER_ASSIGNED_QUEUE =
         "responder.assigned.queue";
 
-public static final String RESPONDER_ASSIGNED_ROUTING_KEY =
+    public static final String RESPONDER_ASSIGNED_ROUTING_KEY =
         "responder.assigned";
 }

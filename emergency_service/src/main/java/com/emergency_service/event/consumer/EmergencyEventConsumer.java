@@ -44,7 +44,6 @@ public class EmergencyEventConsumer {
             assignment.setResponderId(event.getResponderId());
             assignment.setAssignedAt(event.getAssignedAt());
             assignment.setStatus(event.getStatus());
-
             responderAssignmentRepository.save(assignment);
         });
     }
