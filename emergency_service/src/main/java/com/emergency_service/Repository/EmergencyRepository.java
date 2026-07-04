@@ -25,7 +25,7 @@ public interface EmergencyRepository extends JpaRepository<EmergencyRequest, UUI
 
     Page<EmergencyRequest>findByCreatedAtBetween(LocalDateTime startTime,LocalDateTime endTime,Pageable pageable);
 
-    Page<EmergencyRequest>findByIsActiveTrue(boolean isActive,Pageable pageable);
+    Page<EmergencyRequest>findByIsActive(boolean isActive,Pageable pageable);
 
     boolean existsByEmergencyId(UUID emergencyId);
 
@@ -37,4 +37,7 @@ WHERE e.userId=:userId
 AND e.isActive=true
 """)
 Optional<EmergencyRequest> findActiveEmergency(UUID userId);
+
+Page<EmergencyRequest>getAllEmergency(Pageable pageable);
+Page<EmergencyRequest> findByResponderId(UUID responderId, Pageable pageable);
 }

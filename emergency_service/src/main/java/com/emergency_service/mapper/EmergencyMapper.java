@@ -14,14 +14,14 @@ import com.emergency_service.event.model.EmergencyCreatedEvent;
 
 @Mapper(componentModel="spring")
 public interface EmergencyMapper {
-    @Mapping(target="status", ignore=true)
+   @Mapping(target="status", ignore=true)
     @Mapping(target="responderId",ignore=true)
     @Mapping(target="hospitalId",ignore=true)
     @Mapping(target="active",ignore=true)
     @Mapping(target="emergencyId",ignore=true)
     @Mapping(target="userId",source="userId")
     @Mapping(target="images",ignore=true)
-    @Mapping(target="assignments",ignore=true)
+    @Mapping(target="description",ignore=true)
     @Mapping(target="locationHistory",ignore=true)
     @Mapping(target="createdAt",ignore=true)
     @Mapping(target="updatedAt",ignore=true)

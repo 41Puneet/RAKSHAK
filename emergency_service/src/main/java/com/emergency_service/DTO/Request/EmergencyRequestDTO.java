@@ -6,6 +6,7 @@ import com.emergency_service.Enums.Priority;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
+import java.util.UUID;
 
 public class EmergencyRequestDTO {
     
@@ -21,7 +22,7 @@ public class EmergencyRequestDTO {
     @DecimalMax(value="180.0")
     private Double longitude;
     private String description;
-    
+    private UUID userId;
     private String address;
     @NotNull
     private Priority priority;
@@ -29,12 +30,13 @@ public class EmergencyRequestDTO {
     public EmergencyRequestDTO(){
 
     }
-    public EmergencyRequestDTO(EmergencyType emergencyType,Double latitude,Double longitude,String description,String address,Priority priority){
+    public EmergencyRequestDTO(EmergencyType emergencyType,Double latitude,Double longitude,String description,String address,Priority priority,UUID userId){
         this.emergencyType=emergencyType;
         this.latitude=latitude;
         this.longitude=longitude;
         this.description=description;
         this.address=address;
+        this.userId=userId;
         this.priority=priority;
     }
     public EmergencyType getEmergencyType() {
@@ -72,6 +74,12 @@ public class EmergencyRequestDTO {
     }
     public void setPriority(Priority priority) {
         this.priority = priority;
+    }
+    public UUID getUserId() {
+        return userId;
+    }
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
     
 }

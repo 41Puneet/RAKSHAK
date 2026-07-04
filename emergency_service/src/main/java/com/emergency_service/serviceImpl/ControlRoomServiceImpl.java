@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.emergency_service.DTO.Response.EmergencyResponseDTO;
-import com.emergency_service.Entity.EmergencyRequest;
 import com.emergency_service.Enums.EmergencyType;
 import com.emergency_service.Enums.Priority;
 import com.emergency_service.Enums.Status;

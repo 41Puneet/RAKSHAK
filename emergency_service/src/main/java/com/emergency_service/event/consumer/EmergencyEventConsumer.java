@@ -14,6 +14,7 @@ import com.emergency_service.event.model.ResponderAssignedEvent;
 @Component
 public class EmergencyEventConsumer {
 
+    
     private final EmergencyRepository emergencyRepository;
     private final ResponderAssignmentRepository responderAssignmentRepository;
 
