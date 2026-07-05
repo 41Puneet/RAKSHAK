@@ -3,12 +3,15 @@ package com.responder_service.Entity;
 import java.util.UUID;
 
 import com.responder_service.Enums.VehicleType;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 
@@ -20,10 +23,9 @@ public class ResponderVehicle {
     @GeneratedValue(strategy=GenerationType.UUID)
     private UUID id;
     @Column(nullable=false)
-    private UUID responderId;
-    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
     private VehicleType vehicleType;
-    @Column(nullable=false)
+    @Column(nullable=false,unique=true)
     private String vehicleNumber;
     @Column(nullable=false)
     private String model;
@@ -32,28 +34,33 @@ public class ResponderVehicle {
     @Column(nullable=false)
     private boolean active;
 
+    @OneToOne
+    @JoinColumn(name="responder_id",nullable=false,unique=true)
+    private Responder responder;
+
     public ResponderVehicle(){
 
     }
-    public ResponderVehicle(UUID id,UUID responderId,VehicleType vehicleType,String vehicleNumber,String model,int capacity,boolean active){
+    public ResponderVehicle(UUID id,VehicleType vehicleType,String vehicleNumber,String model,int capacity,boolean active,Responder responder){
         this.id=id;
-        this.responderId=responderId;
         this.vehicleType=vehicleType;
         this.vehicleNumber=vehicleNumber;
         this.capacity=capacity;
         this.active=active;
+        this.responder=responder;
+        this.model=model;
+    }
+    public Responder getResponder() {
+        return responder;
+    }
+    public void setResponder(Responder responder) {
+        this.responder = responder;
     }
     public UUID getId() {
         return id;
     }
     public void setId(UUID id) {
         this.id = id;
-    }
-    public UUID getResponderId() {
-        return responderId;
-    }
-    public void setResponderId(UUID responderId) {
-        this.responderId = responderId;
     }
     public VehicleType getVehicleType() {
         return vehicleType;
