@@ -2,6 +2,8 @@ package com.responder_service.DTO.response;
 
 import java.util.UUID;
 
+import com.responder_service.Enums.AvailabilityStatus;
+import com.responder_service.Enums.DutyStatus;
 import com.responder_service.Enums.ResponderType;
 
 public class ResponderResponse {
@@ -12,17 +14,41 @@ public class ResponderResponse {
     private ResponderType type;
     private Double latitude;
     private Double longitude;
+    private AvailabilityStatus status;
+    private DutyStatus dutyStatus;
+    private boolean active;
     
     public ResponderResponse(){
 
     }
-    public ResponderResponse(UUID id ,UUID userId,String badgeNumber,ResponderType type,Double latitude,Double longitude){
+    public ResponderResponse(UUID id ,UUID userId,String badgeNumber,ResponderType type,Double latitude,Double longitude,AvailabilityStatus status,DutyStatus dutyStatus,boolean active){
         this.id=id;
         this.userId=userId;
         this.badgeNumber=badgeNumber;
         this.type=type;
         this.latitude=latitude;
         this.longitude=longitude;
+        this.status=status;
+        this.dutyStatus=dutyStatus;
+        this.active=active;
+    }
+    public AvailabilityStatus getStatus() {
+        return status;
+    }
+    public void setStatus(AvailabilityStatus status) {
+        this.status = status;
+    }
+    public DutyStatus getDutyStatus() {
+        return dutyStatus;
+    }
+    public void setDutyStatus(DutyStatus dutyStatus) {
+        this.dutyStatus = dutyStatus;
+    }
+    public boolean isActive() {
+        return active;
+    }
+    public void setActive(boolean active) {
+        this.active = active;
     }
     public UUID getId() {
         return id;

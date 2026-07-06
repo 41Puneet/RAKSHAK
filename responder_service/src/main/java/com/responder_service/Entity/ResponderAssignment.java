@@ -1,4 +1,4 @@
-package com.responder_service.Entity;
+package com.responder_service.entity;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -37,7 +37,6 @@ public class ResponderAssignment {
     private LocalDateTime reachedAt;
     @Column(nullable=false)
     private LocalDateTime completedAt;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "responder_id")
     private Responder responder;

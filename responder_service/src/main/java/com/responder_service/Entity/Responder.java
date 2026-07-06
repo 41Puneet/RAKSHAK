@@ -1,4 +1,4 @@
-package com.responder_service.Entity;
+package com.responder_service.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
