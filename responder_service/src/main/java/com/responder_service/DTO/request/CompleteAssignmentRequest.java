@@ -8,7 +8,6 @@ import com.responder_service.Enums.Assignment_Status;
 import jakarta.validation.constraints.NotNull;
 
 public class CompleteAssignmentRequest {
-    
 
     @NotNull
     private UUID id;

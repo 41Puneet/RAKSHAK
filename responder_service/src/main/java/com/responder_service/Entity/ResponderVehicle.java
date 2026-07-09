@@ -1,7 +1,6 @@
-package com.responder_service.entity;
+package com.responder_service.Entity;
 
 import java.util.UUID;
-
 import com.responder_service.Enums.VehicleType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

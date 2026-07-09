@@ -3,7 +3,6 @@ package com.responder_service.DTO.response;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.responder_service.DTO.request.AssignResponderRequest;
 import com.responder_service.Enums.Assignment_Status;
 
 

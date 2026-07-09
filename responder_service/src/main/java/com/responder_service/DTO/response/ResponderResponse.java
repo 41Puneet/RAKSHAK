@@ -17,11 +17,13 @@ public class ResponderResponse {
     private AvailabilityStatus status;
     private DutyStatus dutyStatus;
     private boolean active;
+    private VehicleResponse vehicle;
     
     public ResponderResponse(){
 
     }
-    public ResponderResponse(UUID id ,UUID userId,String badgeNumber,ResponderType type,Double latitude,Double longitude,AvailabilityStatus status,DutyStatus dutyStatus,boolean active){
+    public ResponderResponse(UUID id ,UUID userId,String badgeNumber,ResponderType type,Double latitude,Double longitude,AvailabilityStatus status,DutyStatus dutyStatus,boolean active,VehicleResponse vehicle){
+        this.vehicle=vehicle;
         this.id=id;
         this.userId=userId;
         this.badgeNumber=badgeNumber;
@@ -32,6 +34,7 @@ public class ResponderResponse {
         this.dutyStatus=dutyStatus;
         this.active=active;
     }
+    
     public AvailabilityStatus getStatus() {
         return status;
     }
@@ -85,6 +88,12 @@ public class ResponderResponse {
     }
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+    public VehicleResponse getVehicle() {
+        return vehicle;
+    }
+    public void setVehicle(VehicleResponse vehicle) {
+        this.vehicle = vehicle;
     }
     
 }

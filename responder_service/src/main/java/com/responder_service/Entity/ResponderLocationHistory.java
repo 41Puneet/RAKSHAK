@@ -1,4 +1,4 @@
-package com.responder_service.entity;
+package com.responder_service.Entity;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

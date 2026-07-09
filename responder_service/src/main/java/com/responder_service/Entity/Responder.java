@@ -1,4 +1,4 @@
-package com.responder_service.entity;
+package com.responder_service.Entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,26 +32,36 @@ public class Responder {
     @Id
     @GeneratedValue(strategy=GenerationType.UUID)
     private UUID id;
+
     @Column(nullable=false)
     private UUID userId;
+
     @Column(nullable=false,unique=true)
     private String badgeNumber;
+
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
     private ResponderType type;
+
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
     private AvailabilityStatus status;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable=false)
     private DutyStatus dutyStatus ;
+
     @Column(nullable=false)
     private Double latitude;
+
     @Column(nullable=false)
     private Double longitude;
+
     @Column(nullable=false)
     private boolean active;
+
     private LocalDateTime createdAt;
+    
     private LocalDateTime updatedAt;
 
     @OneToOne(mappedBy="responder",cascade = CascadeType.ALL,fetch=FetchType.LAZY,orphanRemoval = true)
