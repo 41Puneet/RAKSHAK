@@ -41,7 +41,7 @@ public class Responder {
 
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
-    private ResponderType type;
+    private ResponderType responderType;
 
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
@@ -93,11 +93,11 @@ private List<ResponderAssignment> assignments;
     public Responder(){
 
     }
-    public Responder(UUID id,UUID userId,String badgeNumber,ResponderType type,AvailabilityStatus status,DutyStatus dutyStatus,Double latitude,Double longitude,boolean active,LocalDateTime createdAt,LocalDateTime updatedAt,List<ResponderLocationHistory>location,List<ResponderAvailabilityHistory>history,List<ResponderAssignment>assignments,ResponderVehicle responderVehicle){
+    public Responder(UUID id,UUID userId,String badgeNumber,ResponderType responderType,AvailabilityStatus status,DutyStatus dutyStatus,Double latitude,Double longitude,boolean active,LocalDateTime createdAt,LocalDateTime updatedAt,List<ResponderLocationHistory>location,List<ResponderAvailabilityHistory>history,List<ResponderAssignment>assignments,ResponderVehicle responderVehicle){
         this.responderVehicle=responderVehicle;
         this.id=id;
         this.userId=userId;
-        this.type=type;
+        this.responderType=responderType;
         this.badgeNumber=badgeNumber;
         this.status=status;
         this.dutyStatus=dutyStatus;
@@ -152,11 +152,11 @@ private List<ResponderAssignment> assignments;
     public void setBadgeNumber(String badgeNumber) {
         this.badgeNumber = badgeNumber;
     }
-    public ResponderType getType() {
-        return type;
+    public ResponderType getResponderType() {
+        return responderType;
     }
-    public void setType(ResponderType type) {
-        this.type = type;
+    public void setType(ResponderType responderType) {
+        this.responderType = responderType;
     }
     public AvailabilityStatus getStatus() {
         return status;

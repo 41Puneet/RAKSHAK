@@ -13,19 +13,36 @@ import com.responder_service.Entity.ResponderVehicle;
 import com.responder_service.Entity.ResponderAvailabilityHistory;
 import com.responder_service.Entity.ResponderLocationHistory;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ResponderMapper {
 
-        Responder toEntity(CreateResponderRequest request);
+    @Mapping(target="id", ignore = true)
+    @Mapping(target="status",ignore=true)
+    @Mapping(target="dutyStatus",ignore=true)
+    @Mapping(target="latitude",ignore=true)
+    @Mapping(target="longitude",ignore=true)
+    @Mapping(target="active",ignore=true)
+    @Mapping(target="createdAt",ignore=true)
+    @Mapping(target="updatedAt",ignore=true)
+    @Mapping(target="location",ignore=true)
+    @Mapping(target="history",ignore=true)
+    @Mapping(target="assignments",ignore=true)
+    @Mapping(target="responderVehicle",ignore=true)
+    Responder toEntity(CreateResponderRequest request);
 
+    
     ResponderResponse toResponse(Responder responder);
 
+
+    @Mapping(target="id",ignore=true)
+    @Mapping(target="active",ignore=true)
     ResponderVehicle toEntity(RegisterVehicleRequest request);
 
     VehicleResponse toResponse(ResponderVehicle vehicle);
 
-    AssignmentResponse toResponse(ResponderAssignment assignment);
+    AssignmentResponse toAssignmentResponse(ResponderAssignment assignment);
 
     AvailabilityHistoryResponse toResponse(
             ResponderAvailabilityHistory history);

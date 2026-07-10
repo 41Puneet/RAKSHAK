@@ -11,7 +11,7 @@ public class ResponderResponse {
     private UUID id;
     private UUID userId;
     private String badgeNumber;
-    private ResponderType type;
+    private ResponderType responderType;
     private Double latitude;
     private Double longitude;
     private AvailabilityStatus status;
@@ -27,7 +27,7 @@ public class ResponderResponse {
         this.id=id;
         this.userId=userId;
         this.badgeNumber=badgeNumber;
-        this.type=type;
+        this.responderType=type;
         this.latitude=latitude;
         this.longitude=longitude;
         this.status=status;
@@ -71,11 +71,11 @@ public class ResponderResponse {
     public void setBadgeNumber(String badgeNumber) {
         this.badgeNumber = badgeNumber;
     }
-    public ResponderType getType() {
-        return type;
+    public ResponderType getResponderType() {
+        return responderType;
     }
     public void setType(ResponderType type) {
-        this.type = type;
+        this.responderType = type;
     }
     public Double getLatitude() {
         return latitude;

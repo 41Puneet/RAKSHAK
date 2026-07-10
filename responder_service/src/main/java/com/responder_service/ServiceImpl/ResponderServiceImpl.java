@@ -21,13 +21,18 @@ import com.responder_service.DTO.response.AvailabilityHistoryResponse;
 import com.responder_service.DTO.response.LocationHistoryResponse;
 import com.responder_service.DTO.response.ResponderResponse;
 import com.responder_service.DTO.response.VehicleResponse;
+import com.responder_service.Entity.ResponderAssignment;
 import com.responder_service.Enums.Assignment_Status;
+import com.responder_service.Enums.AvailabilityStatus;
+import com.responder_service.Enums.DutyStatus;
 import com.responder_service.Mapper.ResponderMapper;
 import com.responder_service.Repository.ResponderAssignmentRepository;
 import com.responder_service.Repository.ResponderAvailabilityRepository;
 import com.responder_service.Repository.ResponderLocationHistoryRepository;
 import com.responder_service.Repository.ResponderRepository;
 import com.responder_service.Repository.ResponderVehicleRepository;
+import com.responder_service.Entity.ResponderVehicle;
+import com.responder_service.Entity.Responder;
 import com.responder_service.service.ResponderService;
 import jakarta.transaction.Transactional;
 
@@ -41,7 +46,7 @@ private final ResponderLocationHistoryRepository locationRepository;
 private final ResponderRepository responderRepository;
 private final ResponderVehicleRepository vehicleRepository;
 private final ResponderMapper mapper;
-private final Logger logger=LoggerFactory.getLogger(ResponderServiceImpl.class);
+private static final Logger logger=LoggerFactory.getLogger(ResponderServiceImpl.class);
 public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, ResponderAvailabilityRepository availabilityRepository, ResponderLocationHistoryRepository locationRepository, ResponderRepository responderRepository, ResponderVehicleRepository vehicleRepository, ResponderMapper mapper) {
     this.assignmentRepository = assignmentRepository;
     this.availabilityRepository = availabilityRepository;
@@ -58,38 +63,72 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
 
     @Override
     public AssignmentResponse completeAssignment(CompleteAssignmentRequest request) {
-        // TODO Auto-generated method stub
-        return null;
+        Optional<ResponderAssignment> assignment = assignmentRepository.findById(request.getId());
+        if (assignment.isPresent()) {
+            ResponderAssignment responderAssignment = assignment.get();
+            responderAssignment.setStatus(Assignment_Status.COMPLETED);
+            ResponderAssignment updatedAssignment = assignmentRepository.save(responderAssignment);
+            return mapper.toAssignmentResponse(updatedAssignment);
+        }
+        throw new IllegalArgumentException("Assignment not found with this id"+request.getId());
     }
 
     @Override
     public ResponderResponse createResponder(CreateResponderRequest request) {
-        // TODO Auto-generated method stub
-        return null;
+       Optional<Responder> responder1 = responderRepository.findByUserId(request.getUserId());
+       if (responder1.isPresent()) {
+           throw new IllegalArgumentException("Responder already present with this user Id" + request.getUserId());
+       }
+       Responder responder = mapper.toResponderEntity(request);
+       responder.setId(UUID.randomUUID());
+       responder.setStatus(AvailabilityStatus.AVAILABLE);
+       responder.setDutyStatus(DutyStatus.OFF_DUTY);
+       responder.setLatitude(null);
+       responder.setLongitude(null);
+       responder.setActive(false);
+       responder.setLocation(null);
+       responder.setHistory(null);
+       responder.setAssignments(null);
+       responder.setResponderVehicle(null);
+       Responder savedResponder = responderRepository.save(responder);
+       return mapper.toResponderResponse(savedResponder);
     }
 
     @Override
     public void deleteResponder(UUID responderId) {
-        // TODO Auto-generated method stub
-        
+        Optional<Responder> responder = responderRepository.findById(responderId);
+       if(responder.isPresent()){
+        responderRepository.delete(responder.get());
+       }
+       else{
+        throw new IllegalArgumentException("Responder not found with this responderId"+responderId);
+       }
     }
 
     @Override
     public void deleteVehicle(UUID vehicleId) {
-        // TODO Auto-generated method stub
-        
+       Optional<ResponderVehicle>vehicle=vehicleRepository.findById(vehicleId);
+       if(vehicle.isPresent()){
+        vehicleRepository.delete(vehicle.get());
+       }
+    else{
+        throw new IllegalArgumentException("Vehicle not found with this vehicle Id"+vehicleId);
+    }
     }
 
     @Override
     public AssignmentResponse getAssignmentById(UUID assignmentId) {
-        // TODO Auto-generated method stub
-        return null;
+       Optional<ResponderAssignment> assignment=assignmentRepository.findById(assignmentId);
+       if(assignment.isPresent()){
+        return mapper.toAssignmentResponse(assignment.get());
+       }
+        throw new IllegalArgumentException("Assignment not found with id"+assignmentId);
     }
 
     @Override
     public Page<AssignmentResponse> getAssignmentResponseByResponderId(UUID responderId, Pageable pageable) {
-        // TODO Auto-generated method stub
-        return null;
+        Page<ResponderAssignment> assignment = assignmentRepository.findByResponder_Id(responderId, pageable);
+        return assignment.map(mapper::toAssignmentResponse);
     }
 
     @Override
