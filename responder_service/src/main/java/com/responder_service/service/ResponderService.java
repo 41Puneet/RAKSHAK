@@ -54,9 +54,7 @@ VehicleResponse getVehicleByResponder(UUID responderId);
 // for the control room
 Page<AssignmentResponse> getAssignmentResponseByResponderId(UUID responderId,Pageable pageable);
 
-Page<AssignmentResponse> getByResponderIdAndStatus(UUID responderId,Assignment_Status status,Pageable pageable);
-
-Page<AssignmentResponse> getByAssignmentStatus(Assignment_Status status,Pageable pageable);
+Page<AssignmentResponse> getByAssignmentStatus(UUID responderId,Assignment_Status status,Pageable pageable);
 
 Page<AvailabilityHistoryResponse> getAvailabilityByResponderId(UUID responderId,Pageable pageable);
 

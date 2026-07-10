@@ -22,6 +22,8 @@ import com.responder_service.DTO.response.LocationHistoryResponse;
 import com.responder_service.DTO.response.ResponderResponse;
 import com.responder_service.DTO.response.VehicleResponse;
 import com.responder_service.Entity.ResponderAssignment;
+import com.responder_service.Entity.ResponderAvailabilityHistory;
+import com.responder_service.Entity.ResponderLocationHistory;
 import com.responder_service.Enums.Assignment_Status;
 import com.responder_service.Enums.AvailabilityStatus;
 import com.responder_service.Enums.DutyStatus;
@@ -133,50 +135,46 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
 
     @Override
     public Page<AvailabilityHistoryResponse> getAvailabilityByResponderId(UUID responderId, Pageable pageable) {
-        // TODO Auto-generated method stub
-        return null;
+       Page<ResponderAvailabilityHistory> availability=availabilityRepository.findByResponder_Id(responderId, pageable);
+       return availability.map(mapper::toAvailabilityResponse);
     }
 
     @Override
     public Page<VehicleResponse> getByActiveVehicle(boolean active, Pageable pageable) {
-        // TODO Auto-generated method stub
-        return null;
+       Page<ResponderVehicle>vehicle=vehicleRepository.findByActive(true, pageable);
+       return vehicle.map(mapper::toVehicleResponse);
     }
 
     @Override
-    public Page<AssignmentResponse> getByAssignmentStatus(Assignment_Status status, Pageable pageable) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Page<AssignmentResponse> getByResponderIdAndStatus(UUID responderId, Assignment_Status status,
-            Pageable pageable) {
-        // TODO Auto-generated method stub
-        return null;
+    public Page<AssignmentResponse> getByAssignmentStatus(UUID responderId,Assignment_Status status, Pageable pageable) {
+        Page<ResponderAssignment>assignment=assignmentRepository.findByResponder_IdAndStatus(responderId, status, pageable);
+        return assignment.map(mapper::toAssignmentResponse);
     }
 
     @Override
     public Optional<LocationHistoryResponse> getByResponderIdAndTime(UUID responderId) {
-        // TODO Auto-generated method stub
-        return Optional.empty();
+        Optional<ResponderLocationHistory>location=locationRepository.findTopByResponder_IdOrderByTimestampDesc(responderId);
+        return mapper.toResponderLocationResponse(location.get());
     }
 
     @Override
     public Page<LocationHistoryResponse> getByTimeBetween(LocalDateTime start, LocalDateTime end, Pageable pageable) {
-        // TODO Auto-generated method stub
-        return null;
+      Page<ResponderLocationHistory>location=locationRepository.findByTimestampBetween(start, end, pageable);
+      return location.map(mapper::toResponderLocationResponse);
     }
 
     @Override
     public Page<LocationHistoryResponse> getLocationByResponderId(UUID responderId, Pageable pageable) {
-        // TODO Auto-generated method stub
-        return null;
+        Page<ResponderLocationHistory>location=locationRepository.findByResponder_Id(responderId, pageable);
+        return location.map(mapper::toResponderLocationResponse);
     }
 
     @Override
     public ResponderResponse getResponderByID(UUID responderId) {
-        // TODO Auto-generated method stub
+       Responder responder=responderRepository.findByResponderId(responderId);
+       if(responder!=null){
+        return mapper.toResponderResponse(responder);
+       }
         return null;
     }
 
