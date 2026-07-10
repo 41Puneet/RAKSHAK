@@ -40,4 +40,6 @@ public interface ResponderRepository extends JpaRepository<Responder, UUID> {
             LocalDateTime start,
             LocalDateTime end,
             Pageable pageable);
+
+     Responder findByResponderId(UUID responderId);
 }

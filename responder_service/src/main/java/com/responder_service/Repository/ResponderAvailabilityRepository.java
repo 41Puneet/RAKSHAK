@@ -38,4 +38,6 @@ public interface ResponderAvailabilityRepository
     // Latest status change of a responder
     Optional<ResponderAvailabilityHistory> findTopByResponder_IdOrderByChangedAtDesc(
             UUID responderId);
+
+            
 }

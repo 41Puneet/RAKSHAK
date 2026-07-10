@@ -28,4 +28,6 @@ public interface ResponderAssignmentRepository
             Pageable pageable);
 
     boolean existsByEmergencyId(UUID emergencyId);
+
+    Optional<ResponderAssignment> findById(UUID AssignmentId);
 }

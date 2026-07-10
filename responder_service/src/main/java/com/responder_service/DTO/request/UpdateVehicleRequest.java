@@ -1,9 +1,6 @@
 package com.responder_service.DTO.request;
 
-import java.util.UUID;
-
 import com.responder_service.Enums.VehicleType;
-
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -153,7 +153,7 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
     }
 
     @Override
-    public Optional<LocationHistoryResponse> getByResponderIdAndTime(UUID responderId) {
+    public LocationHistoryResponse getByResponderIdAndTime(UUID responderId) {
         Optional<ResponderLocationHistory>location=locationRepository.findTopByResponder_IdOrderByTimestampDesc(responderId);
         return mapper.toResponderLocationResponse(location.get());
     }
@@ -205,26 +205,52 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
         }
         ResponderVehicle responderVehicle = mapper.toEntity(request);
         responderVehicle.setId(UUID.randomUUID());
+        responderVehicle.setActive(false);
         ResponderVehicle saved = vehicleRepository.save(responderVehicle);
         return mapper.toVehicleResponse(saved);
     }
 
     @Override
-    public AvailabilityHistoryResponse updateAvailability(UpdateAvailabilityRequest request) {
-        // TODO Auto-generated method stub
-        return null;
+    public AvailabilityHistoryResponse updateAvailability(UpdateAvailabilityRequest request, UUID responderId) {
+        Optional<ResponderAvailabilityHistory> availability = availabilityRepository.findTopByResponder_IdOrderByChangedAtDesc(responderId);
+        if (availability.isPresent()) {
+            ResponderAvailabilityHistory availabilityHistory = availability.get();
+            if (availabilityHistory.getPreviousStatus() == request.getNewStatus()) {
+                throw new RuntimeException("Status is not changed" + request.getNewStatus());
+            }
+            availabilityHistory.setNewStatus(request.getNewStatus());
+            ResponderAvailabilityHistory updatedAvailability = availabilityRepository.save(availabilityHistory);
+            return mapper.toAvailabilityResponse(updatedAvailability);
+        }
+        throw new IllegalArgumentException("Responder availability history not found for responderId " + responderId);
     }
 
     @Override
     public ResponderResponse updateResponder(UUID responderId, UpdateResponder request) {
-        // TODO Auto-generated method stub
-        return null;
+       Responder responder=responderRepository.findByResponderId(responderId);
+       if(responder!=null){
+        responder.setBadgeNumber(request.getBadgeNumber());
+        responder.setResponderVehicle(request.getResponderVehicle());
+        Responder updateResponder=responderRepository.save(responder);
+        return mapper.toResponderResponse(updateResponder);
+       }
+        throw new IllegalArgumentException("responder not found with this id"+responderId);
     }
 
     @Override
     public VehicleResponse updateVehicle(UUID vehicleId, UpdateVehicleRequest request) {
-        // TODO Auto-generated method stub
-        return null;
+        Optional<ResponderVehicle> vehicle=vehicleRepository.findById(vehicleId);
+        if(vehicle.isEmpty()){
+            throw new IllegalArgumentException("Vehicle not found with this vehicleId"+vehicleId);
+        }
+        ResponderVehicle responderVehicle = vehicle.get();
+        responderVehicle.setVehicleType(request.getVehicleType());
+        responderVehicle.setVehicleNumber(request.getVehicleNumber());
+        responderVehicle.setModel(request.getModel());
+        responderVehicle.setCapacity(request.getCapacity());
+        responderVehicle.setActive(request.isActive());
+        ResponderVehicle updatedVehicle = vehicleRepository.save(responderVehicle);
+        return mapper.toVehicleResponse(updatedVehicle);
     }
     
 }

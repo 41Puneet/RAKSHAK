@@ -36,7 +36,7 @@ AssignmentResponse completeAssignment(CompleteAssignmentRequest request);
 
 VehicleResponse registerVehicle(RegisterVehicleRequest request);
 
-AvailabilityHistoryResponse updateAvailability(UpdateAvailabilityRequest request);
+AvailabilityHistoryResponse updateAvailability(UpdateAvailabilityRequest request,UUID responderId);
 
 VehicleResponse updateVehicle(UUID vehicleId,UpdateVehicleRequest request);
 

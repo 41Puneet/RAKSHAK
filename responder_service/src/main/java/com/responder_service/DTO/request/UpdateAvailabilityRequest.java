@@ -1,6 +1,5 @@
 package com.responder_service.DTO.request;
 
-import java.util.UUID;
 
 import com.responder_service.Enums.AvailabilityStatus;
 
