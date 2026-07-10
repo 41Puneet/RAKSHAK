@@ -14,12 +14,12 @@ public class RegisterVehicleRequest {
     @NotBlank
     private String model;
     @NotNull
-    private int capacity;
+    private Integer capacity;
 
     public RegisterVehicleRequest(){
 
     }
-    public RegisterVehicleRequest(VehicleType vehicleType,String vehicleNumber,String model,int capacity){
+    public RegisterVehicleRequest(VehicleType vehicleType,String vehicleNumber,String model,Integer capacity){
         this.vehicleType=vehicleType;
         this.vehicleNumber=vehicleNumber;
         this.model=model;
@@ -43,10 +43,10 @@ public class RegisterVehicleRequest {
     public void setModel(String model) {
         this.model = model;
     }
-    public int getCapacity() {
+    public Integer getCapacity() {
         return capacity;
     }
-    public void setCapacity(int capacity) {
+    public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
     

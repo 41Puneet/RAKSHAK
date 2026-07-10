@@ -35,6 +35,7 @@ import com.responder_service.Repository.ResponderRepository;
 import com.responder_service.Repository.ResponderVehicleRepository;
 import com.responder_service.Entity.ResponderVehicle;
 import com.responder_service.Entity.Responder;
+import com.responder_service.Entity.ResponderVehicle;
 import com.responder_service.service.ResponderService;
 import jakarta.transaction.Transactional;
 
@@ -175,25 +176,37 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
        if(responder!=null){
         return mapper.toResponderResponse(responder);
        }
-        return null;
+        throw new IllegalArgumentException("Responder not found with this id"+responderId);
     }
 
     @Override
     public VehicleResponse getVehicleByID(UUID vehicleId) {
-        // TODO Auto-generated method stub
-        return null;
+        Optional<ResponderVehicle>vehicle=vehicleRepository.findById(vehicleId);
+        if(vehicle.isPresent()){
+            return mapper.toVehicleResponse(vehicle.get());
+        }
+        throw new IllegalArgumentException("Vehicle not found with this vehicleId"+vehicleId);
     }
 
     @Override
     public VehicleResponse getVehicleByResponder(UUID responderId) {
-        // TODO Auto-generated method stub
-        return null;
+        Optional<ResponderVehicle> vehicle=vehicleRepository.findByResponder_Id(responderId);
+        if(vehicle.isPresent()){
+        return mapper.toVehicleResponse(vehicle.get());
+        }
+        throw new IllegalArgumentException("Vehicle not found with this responder Id"+responderId);
     }
 
     @Override
     public VehicleResponse registerVehicle(RegisterVehicleRequest request) {
-        // TODO Auto-generated method stub
-        return null;
+        Optional<ResponderVehicle>vehicle=vehicleRepository.findByVehicleNumber(request.getVehicleNumber());
+        if(vehicle.isPresent()){
+            throw new IllegalArgumentException("Vehicle already present with this vehicle Number"+request.getVehicleNumber());
+        }
+        ResponderVehicle responderVehicle = mapper.toEntity(request);
+        responderVehicle.setId(UUID.randomUUID());
+        ResponderVehicle saved = vehicleRepository.save(responderVehicle);
+        return mapper.toVehicleResponse(saved);
     }
 
     @Override

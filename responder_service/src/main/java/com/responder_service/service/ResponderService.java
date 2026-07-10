@@ -60,7 +60,7 @@ Page<AvailabilityHistoryResponse> getAvailabilityByResponderId(UUID responderId,
 
 Page<LocationHistoryResponse> getLocationByResponderId(UUID responderId,Pageable pageable);
 
-Optional<LocationHistoryResponse> getByResponderIdAndTime(UUID responderId);
+LocationHistoryResponse getByResponderIdAndTime(UUID responderId);
 
 Page<LocationHistoryResponse> getByTimeBetween(LocalDateTime start,LocalDateTime end,Pageable pageable);
 
