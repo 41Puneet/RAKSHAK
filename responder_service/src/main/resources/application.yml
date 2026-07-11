@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: responder-service
+  config:
+    import: optional:configserver:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/rakshak_responder_db

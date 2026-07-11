@@ -142,7 +142,7 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
 
     @Override
     public Page<VehicleResponse> getByActiveVehicle(boolean active, Pageable pageable) {
-       Page<ResponderVehicle>vehicle=vehicleRepository.findByActive(true, pageable);
+       Page<ResponderVehicle>vehicle=vehicleRepository.findByActive(active, pageable);
        return vehicle.map(mapper::toVehicleResponse);
     }
 
@@ -155,7 +155,10 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
     @Override
     public LocationHistoryResponse getByResponderIdAndTime(UUID responderId) {
         Optional<ResponderLocationHistory>location=locationRepository.findTopByResponder_IdOrderByTimestampDesc(responderId);
-        return mapper.toResponderLocationResponse(location.get());
+        if(location.isPresent()){
+            return mapper.toResponderLocationResponse(location.get());
+        }
+        throw new IllegalArgumentException("Location history not found for responderId " + responderId);
     }
 
     @Override

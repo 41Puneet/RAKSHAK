@@ -32,8 +32,16 @@ public interface ResponderMapper {
     @Mapping(target="responderVehicle",ignore=true)
     Responder toEntity(CreateResponderRequest request);
 
+    default Responder toResponderEntity(CreateResponderRequest request) {
+        return toEntity(request);
+    }
+
     
     ResponderResponse toResponse(Responder responder);
+
+    default ResponderResponse toResponderResponse(Responder responder) {
+        return toResponse(responder);
+    }
 
 
     @Mapping(target="id",ignore=true)
@@ -42,11 +50,25 @@ public interface ResponderMapper {
 
     VehicleResponse toResponse(ResponderVehicle vehicle);
 
+    default VehicleResponse toVehicleResponse(ResponderVehicle vehicle) {
+        return toResponse(vehicle);
+    }
+
     AssignmentResponse toAssignmentResponse(ResponderAssignment assignment);
 
     AvailabilityHistoryResponse toResponse(
             ResponderAvailabilityHistory history);
 
+    default AvailabilityHistoryResponse toAvailabilityResponse(
+            ResponderAvailabilityHistory history) {
+        return toResponse(history);
+    }
+
     LocationHistoryResponse toResponse(
             ResponderLocationHistory history);
+
+    default LocationHistoryResponse toResponderLocationResponse(
+            ResponderLocationHistory history) {
+        return toResponse(history);
+    }
 }
