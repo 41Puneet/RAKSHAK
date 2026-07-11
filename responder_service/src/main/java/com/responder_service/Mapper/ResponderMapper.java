@@ -30,45 +30,23 @@ public interface ResponderMapper {
     @Mapping(target="history",ignore=true)
     @Mapping(target="assignments",ignore=true)
     @Mapping(target="responderVehicle",ignore=true)
-    Responder toEntity(CreateResponderRequest request);
-
-    default Responder toResponderEntity(CreateResponderRequest request) {
-        return toEntity(request);
-    }
+    Responder toResponderEntity(CreateResponderRequest request);
 
     
-    ResponderResponse toResponse(Responder responder);
-
-    default ResponderResponse toResponderResponse(Responder responder) {
-        return toResponse(responder);
-    }
+    ResponderResponse toResponderResponse(Responder responder);
 
 
     @Mapping(target="id",ignore=true)
     @Mapping(target="active",ignore=true)
     ResponderVehicle toEntity(RegisterVehicleRequest request);
 
-    VehicleResponse toResponse(ResponderVehicle vehicle);
-
-    default VehicleResponse toVehicleResponse(ResponderVehicle vehicle) {
-        return toResponse(vehicle);
-    }
+    VehicleResponse toVehicleResponse(ResponderVehicle vehicle);
 
     AssignmentResponse toAssignmentResponse(ResponderAssignment assignment);
 
-    AvailabilityHistoryResponse toResponse(
+    AvailabilityHistoryResponse toAvailabilityResponse(
             ResponderAvailabilityHistory history);
 
-    default AvailabilityHistoryResponse toAvailabilityResponse(
-            ResponderAvailabilityHistory history) {
-        return toResponse(history);
-    }
-
-    LocationHistoryResponse toResponse(
+    LocationHistoryResponse toResponderLocationResponse(
             ResponderLocationHistory history);
-
-    default LocationHistoryResponse toResponderLocationResponse(
-            ResponderLocationHistory history) {
-        return toResponse(history);
-    }
 }

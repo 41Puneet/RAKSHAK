@@ -35,7 +35,6 @@ import com.responder_service.Repository.ResponderRepository;
 import com.responder_service.Repository.ResponderVehicleRepository;
 import com.responder_service.Entity.ResponderVehicle;
 import com.responder_service.Entity.Responder;
-import com.responder_service.Entity.ResponderVehicle;
 import com.responder_service.service.ResponderService;
 import jakarta.transaction.Transactional;
 
@@ -142,7 +141,7 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
 
     @Override
     public Page<VehicleResponse> getByActiveVehicle(boolean active, Pageable pageable) {
-       Page<ResponderVehicle>vehicle=vehicleRepository.findByActive(active, pageable);
+       Page<ResponderVehicle>vehicle=vehicleRepository.findByActive(true, pageable);
        return vehicle.map(mapper::toVehicleResponse);
     }
 
@@ -155,10 +154,7 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
     @Override
     public LocationHistoryResponse getByResponderIdAndTime(UUID responderId) {
         Optional<ResponderLocationHistory>location=locationRepository.findTopByResponder_IdOrderByTimestampDesc(responderId);
-        if(location.isPresent()){
-            return mapper.toResponderLocationResponse(location.get());
-        }
-        throw new IllegalArgumentException("Location history not found for responderId " + responderId);
+        return mapper.toResponderLocationResponse(location.get());
     }
 
     @Override
