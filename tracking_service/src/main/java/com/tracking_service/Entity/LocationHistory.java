@@ -3,7 +3,7 @@ package com.tracking_service.Entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.hibernate.type.EntityType;
+import com.tracking_service.Enum.EntityType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

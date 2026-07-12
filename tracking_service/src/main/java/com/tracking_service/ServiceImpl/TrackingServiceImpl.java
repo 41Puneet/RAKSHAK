@@ -7,77 +7,129 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import com.tracking_service.DTO.Request.LocationUpdateRequest;
 import com.tracking_service.DTO.Response.LocationResponse;
 import com.tracking_service.Entity.CurrentLocation;
 import com.tracking_service.Entity.LocationHistory;
 import com.tracking_service.Mapper.TrackingMapper;
+import com.tracking_service.RabbitMQevent.event.LocationUpdatedEvent;
 import com.tracking_service.RabbitMQevent.publisher.LocationEventPublisher;
 import com.tracking_service.Repository.CurrentLocationRepository;
 import com.tracking_service.Repository.LocationHistoryRepository;
 import com.tracking_service.Service.TrackingService;
 
+import jakarta.transaction.Transactional;
+
+@Service
+@Transactional
 public class TrackingServiceImpl implements TrackingService {
 
     private final CurrentLocationRepository currentRepository;
     private final LocationHistoryRepository historyRepository;
     private final LocationEventPublisher locationEventPublisher;
     private final TrackingMapper mapper;
-    private static final Logger logger=LoggerFactory.getLogger(TrackingServiceImpl.class);
 
-    public TrackingServiceImpl(CurrentLocationRepository currentRepository,LocationHistoryRepository historyRepository,LocationEventPublisher locationEventPublisher,TrackingMapper mapper){
-        this.currentRepository=currentRepository;
-        this.historyRepository=historyRepository;
-        this.locationEventPublisher=locationEventPublisher;
-        this.mapper=mapper;
-    }
+    private static final Logger logger =
+            LoggerFactory.getLogger(TrackingServiceImpl.class);
 
-    @Override
-    public LocationResponse getCurrentLocation(UUID entityId) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+    public TrackingServiceImpl(CurrentLocationRepository currentRepository,
+                               LocationHistoryRepository historyRepository,
+                               LocationEventPublisher locationEventPublisher,
+                               TrackingMapper mapper) {
 
-    @Override
-    public Page<LocationResponse> getLocationHistory(UUID entityId, Pageable pageable) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Page<LocationResponse> getLocationHistoryBetween(UUID entityId, LocalDateTime start, LocalDateTime end,
-            Pageable pageable) {
-        Page<com.tracking_service.Entity.LocationHistory> historyPage = historyRepository.findByEntityIdAndTimestampBetween(entityId, start, end, pageable);
-        return historyPage.map(mapper::toLocationResponse);
+        this.currentRepository = currentRepository;
+        this.historyRepository = historyRepository;
+        this.locationEventPublisher = locationEventPublisher;
+        this.mapper = mapper;
     }
 
     @Override
     public LocationResponse processLocationUpdate(LocationUpdateRequest request) {
 
-       CurrentLocation currentLocation = currentRepository.findByEntityId(request.getEntityId());
-       if (currentLocation != null) {
-           currentLocation.setLatitude(request.getLatitude());
-           currentLocation.setLongitude(request.getLongitude());
-           currentLocation.setTimestamp(request.getTimestamp());
-       }
+        logger.info("Received location update for entity {}", request.getEntityId());
 
-       // map request to entities
-       CurrentLocation location = mapper.toCurrentLocation(request);
-       LocationHistory history = mapper.toLocationHistory(request);
+        CurrentLocation currentLocation =
+                currentRepository.findByEntityId(request.getEntityId());
 
-       locationEventPublisher.publishLocationUpdatedEvent(request);
+        if (currentLocation == null) {
 
-       // save current location (update or insert)
-       CurrentLocation savedCurrent = currentRepository.save(location);
+            logger.info("Creating new location for entity {}",
+                    request.getEntityId());
 
-       // save history
-       historyRepository.save(history);
+            currentLocation = mapper.toCurrentLocation(request);
 
-       // publish event converted to the expected event type
+        } else {
 
+            logger.info("Updating location for entity {}",
+                    request.getEntityId());
 
-       // return response
-       return mapper.toLocationResponse(savedCurrent);
+            currentLocation.setLatitude(request.getLatitude());
+            currentLocation.setLongitude(request.getLongitude());
+            currentLocation.setTimestamp(request.getTimestamp());
+
+        }
+
+        CurrentLocation savedCurrent =
+                currentRepository.save(currentLocation);
+
+        LocationHistory history =
+                mapper.toLocationHistory(request);
+
+        historyRepository.save(history);
+
+        LocationUpdatedEvent event =
+                mapper.toLocationUpdatedEvent(savedCurrent);
+
+        locationEventPublisher.publishLocationUpdatedEvent(event);
+
+        logger.info("Location updated successfully for entity {}",
+                request.getEntityId());
+
+        return mapper.toLocationResponse(savedCurrent);
     }
-    
+
+    @Override
+    public LocationResponse getCurrentLocation(UUID entityId) {
+
+        logger.info("Fetching current location for entity {}", entityId);
+
+        CurrentLocation location =
+                currentRepository.findByEntityId(entityId);
+
+        if (location == null) {
+            throw new RuntimeException("Location not found");
+        }
+
+        return mapper.toLocationResponse(location);
+    }
+
+    @Override
+    public Page<LocationResponse> getLocationHistory(UUID entityId,Pageable pageable) {
+
+        logger.info("Fetching location history for entity {}", entityId);
+
+        Page<LocationHistory> history =
+                historyRepository.findByEntityId(entityId, pageable);
+
+        return history.map(mapper::toLocationResponse);
+    }
+
+    @Override
+    public Page<LocationResponse> getLocationHistoryBetween(UUID entityId,LocalDateTime start,LocalDateTime end,Pageable pageable) {
+
+        logger.info("Fetching location history between {} and {} for entity {}",
+                start, end, entityId);
+
+        Page<LocationHistory> history =
+                historyRepository.findByEntityIdAndTimestampBetween(
+                        entityId,
+                        start,
+                        end,
+                        pageable);
+
+        return history.map(mapper::toLocationResponse);
+    }
+
 }

@@ -1,3 +1,4 @@
+package com.tracking_service.RabbitMQevent.Constant;
 public final class RabbitMQConstants {
 
     private RabbitMQConstants() {}
