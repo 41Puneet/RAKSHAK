@@ -1,0 +1,20 @@
+server:
+  port: 8087
+
+spring:
+  application:
+    name: hospital-service
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+openroute:
+  api-key: eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjU2ZjkyYjg0ZjRmMjQ2MTdhN2QzZjliODQ5MDA2Y2U4IiwiaCI6Im11cm11cjY0In0=
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

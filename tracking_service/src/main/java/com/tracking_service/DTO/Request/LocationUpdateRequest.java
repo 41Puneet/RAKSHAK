@@ -1,28 +1,42 @@
 package com.tracking_service.DTO.Request;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.tracking_service.Enum.EntityType;
 
+import jakarta.validation.constraints.NotNull;
+
+
+
 public class LocationUpdateRequest {
 
+    @NotNull(message = "Entity ID is required")
     private UUID entityId;
+
+    @NotNull(message = "Entity type is required")
     private EntityType entityType;
+
+    @NotNull(message = "Latitude is required")
     private Double latitude;
+
+    @NotNull(message = "Longitude is required")
     private Double longitude;
+
+    @NotNull(message = "Timestamp is required")
     private LocalDateTime timestamp;
 
-    public LocationUpdateRequest() {
-    }
+    public LocationUpdateRequest(){
 
-    public LocationUpdateRequest(UUID entityId, EntityType entityType, Double latitude, Double longitude,
-            LocalDateTime timestamp) {
-        this.entityId = entityId;
-        this.entityType = entityType;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.timestamp = timestamp;
+    }
+    public LocationUpdateRequest(UUID entityId,EntityType entityType,Double latitude,Double longitude,LocalDateTime timestamp){
+    
+        this.entityId=entityId;
+        this.entityType=entityType;
+        this.latitude=latitude;
+        this.longitude=longitude;
+        this.timestamp=timestamp;
     }
 
     public UUID getEntityId() {
@@ -64,4 +78,6 @@ public class LocationUpdateRequest {
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
+
+    
 }
