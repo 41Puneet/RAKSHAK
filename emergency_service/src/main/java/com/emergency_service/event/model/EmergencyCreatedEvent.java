@@ -14,7 +14,7 @@ public class EmergencyCreatedEvent {
     private EmergencyType emergencyType;
     private Double latitude;
     private Double longitude;
-    private Priority priority;
+    private Priority priority;  
     private LocalDateTime createdAt;
     
 

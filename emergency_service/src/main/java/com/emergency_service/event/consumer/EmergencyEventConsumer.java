@@ -2,8 +2,6 @@ package com.emergency_service.event.consumer;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
-
-import com.emergency_service.Entity.EmergencyRequest;
 import com.emergency_service.Entity.ResponderAssignment;
 import com.emergency_service.Enums.Status;
 import com.emergency_service.Repository.EmergencyRepository;
@@ -14,7 +12,7 @@ import com.emergency_service.event.model.ResponderAssignedEvent;
 @Component
 public class EmergencyEventConsumer {
 
-    
+
     private final EmergencyRepository emergencyRepository;
     private final ResponderAssignmentRepository responderAssignmentRepository;
 
@@ -34,6 +32,7 @@ public class EmergencyEventConsumer {
             emergency.setStatus(Status.ASSIGNED);
             emergency.setUpdatedAt(event.getAssignedAt());
             emergency.setActive(true);
+            emergency.setPriority(event.getPriority());
 
             emergencyRepository.save(emergency);
 

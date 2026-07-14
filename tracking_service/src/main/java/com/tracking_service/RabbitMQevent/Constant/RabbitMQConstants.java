@@ -10,4 +10,6 @@ public final class RabbitMQConstants {
     public static final String LOCATION_UPDATED_ROUTING_KEY =
             "tracking.location.updated";
 
+    public static final String LOCATION_UPDATE_QUEUE= "location.update.queue";
+
 }

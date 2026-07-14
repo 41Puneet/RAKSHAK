@@ -1,4 +1,4 @@
-epackage com.emergency_service.Config;
+package com.emergency_service.Config;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -46,5 +46,17 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(responderAssignedQueue)
                 .to(emergencyExchange)
                 .with(RabbitMQconstant.RESPONDER_ASSIGNED_ROUTING_KEY);
+    }
+
+    @Bean
+    public Queue locationTrackingQueue(){
+        return QueueBuilder.durable(RabbitMQconstant.LOCATION_UPDATE_QUEUE).build();
+    }
+ 
+    @Bean
+    public Binding locationTrackingBinding(Queue locationTrackingQueue,TopicExchange emergencyExchange){
+        return BindingBuilder.bind(locationTrackingQueue)
+                             .to(emergencyExchange)
+                             .with(RabbitMQconstant.LOCATION_UPDATED_ROUTING_KEY);   
     }
 }
