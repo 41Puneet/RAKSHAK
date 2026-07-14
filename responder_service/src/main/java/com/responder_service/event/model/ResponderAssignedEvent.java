@@ -16,7 +16,7 @@ public class ResponderAssignedEvent {
     public ResponderAssignedEvent(){
 
     }
-    public ResponderAssignedEvent(UUID emergencyId,UUID responderId,double distanceKm,AssignmentStatus status,LocalDateTime assignedAt){
+    public ResponderAssignedEvent(UUID emergencyId,UUID responderId,double distanceKm,Assignment_Status status,LocalDateTime assignedAt){
         this.emergencyId=emergencyId;
         this.responderId=responderId;       
         this.distanceKm=distanceKm;

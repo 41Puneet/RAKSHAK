@@ -3,7 +3,6 @@ package com.responder_service.ServiceImpl;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -20,7 +19,6 @@ import com.responder_service.DTO.request.UpdateVehicleRequest;
 import com.responder_service.DTO.response.AssignmentResponse;
 import com.responder_service.DTO.response.AvailabilityHistoryResponse;
 import com.responder_service.DTO.response.LocationHistoryResponse;
-import com.responder_service.DTO.response.PriorityResponse;
 import com.responder_service.DTO.response.ResponderResponse;
 import com.responder_service.DTO.response.VehicleResponse;
 import com.responder_service.Entity.ResponderAssignment;
@@ -37,6 +35,7 @@ import com.responder_service.Repository.ResponderLocationHistoryRepository;
 import com.responder_service.Repository.ResponderRepository;
 import com.responder_service.Repository.ResponderVehicleRepository;
 import com.responder_service.event.model.EmergencyPriorityUpdatedEvent;
+import com.responder_service.event.model.ResponderAssignedEvent;
 import com.responder_service.event.publish.PriorityUpdatedEventProducer;
 import com.responder_service.exception.AssignmentNotFoundException;
 import com.responder_service.Entity.ResponderVehicle;
@@ -66,9 +65,32 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
     this.producer=producer;
 }
     @Override
-    public AssignmentResponse assignResponder(AssignResponderRequest request) {
-        // TODO Auto-generated method stub
-        return null;
+    public AssignmentResponse assignResponder(ResponderAssignedEvent event) {
+        Responder responder = responderRepository.findByResponderId(event.getResponderId());
+        if (responder == null) {
+            throw new IllegalArgumentException("Responder not found with this id" + event.getResponderId());
+        }
+        
+        if (assignmentRepository.existsByEmergencyId(event.getEmergencyId())) {
+        throw new IllegalArgumentException(
+                "Responder already assigned to this emergency.");
+    }
+       Optional<ResponderAssignment>assignment=assignmentRepository.findByResponderId(event.getResponderId());
+       if(assignment.isEmpty()){
+        throw new IllegalArgumentException("Responder not found with this responder Id"+event.getResponderId());
+       }
+      ResponderAssignment responderAssignment=new ResponderAssignment();
+
+      responderAssignment.setEmergencyId(event.getEmergencyId());
+      responderAssignment.setStatus(Assignment_Status.ASSIGNED);
+      responderAssignment.setPriority(null);
+      responderAssignment.setAssignedAt(event.getAssignedAt());
+      responderAssignment.setAcceptedAt(event.getAssignedAt());
+      responderAssignment.setReachedAt(null);
+      responderAssignment.setCompletedAt(null);
+      responderAssignment.setResponder(responder);
+        assignmentRepository.save(responderAssignment);
+        return mapper.toAssignmentResponse(responderAssignment);
     }
 
     @Override
@@ -77,6 +99,10 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
         if (assignment.isPresent()) {
             ResponderAssignment responderAssignment = assignment.get();
             responderAssignment.setStatus(Assignment_Status.COMPLETED);
+            responderAssignment.setCompletedAt(LocalDateTime.now());
+            if (responderAssignment.getResponder() != null) {
+                responderAssignment.getResponder().setStatus(AvailabilityStatus.AVAILABLE);
+            }
             ResponderAssignment updatedAssignment = assignmentRepository.save(responderAssignment);
             return mapper.toAssignmentResponse(updatedAssignment);
         }

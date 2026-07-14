@@ -22,6 +22,7 @@ import com.responder_service.DTO.response.PriorityResponse;
 import com.responder_service.DTO.response.ResponderResponse;
 import com.responder_service.DTO.response.VehicleResponse;
 import com.responder_service.Enums.Assignment_Status;
+import com.responder_service.event.model.ResponderAssignedEvent;
 
 public interface ResponderService {
     
@@ -32,7 +33,7 @@ ResponderResponse updateResponder(UUID responderId,UpdateResponder request);
 
 void deleteResponder(UUID responderId);
 
-AssignmentResponse assignResponder(AssignResponderRequest request);
+AssignmentResponse assignResponder(ResponderAssignedEvent event);
 
 AssignmentResponse completeAssignment(CompleteAssignmentRequest request);
 
