@@ -29,6 +29,7 @@ import com.responder_service.Entity.ResponderLocationHistory;
 import com.responder_service.Enums.Assignment_Status;
 import com.responder_service.Enums.AvailabilityStatus;
 import com.responder_service.Enums.DutyStatus;
+import com.responder_service.Enums.EmergencyType;
 import com.responder_service.Mapper.ResponderMapper;
 import com.responder_service.Repository.ResponderAssignmentRepository;
 import com.responder_service.Repository.ResponderAvailabilityRepository;
@@ -37,6 +38,7 @@ import com.responder_service.Repository.ResponderRepository;
 import com.responder_service.Repository.ResponderVehicleRepository;
 import com.responder_service.event.model.EmergencyPriorityUpdatedEvent;
 import com.responder_service.event.publish.PriorityUpdatedEventProducer;
+import com.responder_service.exception.AssignmentNotFoundException;
 import com.responder_service.Entity.ResponderVehicle;
 import com.responder_service.Entity.Responder;
 import com.responder_service.service.ResponderService;
@@ -264,19 +266,21 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
             ResponderAssignment updateAssignment=assignment.get();
            updateAssignment.setPriority(request.getPriority());
            ResponderAssignment savedAssignment=assignmentRepository.save(updateAssignment);
-           EmergencyPriorityUpdatedEvent event=toEmergencyPriorityUpdatedEvent(savedAssignment);
+           EmergencyPriorityUpdatedEvent event=toEmergencyPriorityUpdatedEvent(savedAssignment,request.getEmergencyType());
            producer.publishPriorityUpdatedEvent(event);
            return mapper.toAssignmentResponse(savedAssignment);
         }
-        throw new IllegalArgumentException("Assignment not found");
+        throw new AssignmentNotFoundException("Assignment not found");
     }
     
-    private EmergencyPriorityUpdatedEvent toEmergencyPriorityUpdatedEvent(ResponderAssignment assignment) {
+    private EmergencyPriorityUpdatedEvent toEmergencyPriorityUpdatedEvent(ResponderAssignment assignment,EmergencyType emergencyType) {
         EmergencyPriorityUpdatedEvent event = new EmergencyPriorityUpdatedEvent();
         event.setEmergencyId(assignment.getEmergencyId());
-        event.setResponderId(assignment.getResponderId());
         event.setPriority(assignment.getPriority());
-        event.setTimestamp(LocalDateTime.now());
+        event.setResponderId(assignment.getResponder().getId());
+        event.setLatitude(assignment.getResponder().getLatitude());
+        event.setLongitude(assignment.getResponder().getLongitude());
+        event.setEmergencyType(emergencyType);
         return event;
     }
     

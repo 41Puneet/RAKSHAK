@@ -10,6 +10,7 @@ import com.responder_service.DTO.response.VehicleResponse;
 import com.responder_service.Entity.Responder;
 import com.responder_service.Entity.ResponderAssignment;
 import com.responder_service.Entity.ResponderVehicle;
+import com.responder_service.event.model.EmergencyPriorityUpdatedEvent;
 import com.responder_service.Entity.ResponderAvailabilityHistory;
 import com.responder_service.Entity.ResponderLocationHistory;
 import org.mapstruct.Mapper;
@@ -49,4 +50,6 @@ public interface ResponderMapper {
 
     LocationHistoryResponse toResponderLocationResponse(
             ResponderLocationHistory history);
+
+    EmergencyPriorityUpdatedEvent toEmergencyPriorityUpdatedEvent(ResponderAssignment assignment);
 }

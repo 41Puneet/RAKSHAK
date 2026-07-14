@@ -1,10 +1,8 @@
 package com.responder_service.Enums;
 
 public enum Priority {
-    
- LOW,
+    LOW,
     MEDIUM,
     HIGH,
     CRITICAL
-
 }

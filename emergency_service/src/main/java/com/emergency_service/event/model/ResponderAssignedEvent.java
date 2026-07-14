@@ -5,6 +5,7 @@ package com.emergency_service.event.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import com.emergency_service.Enums.AssignmentStatus;
+import com.emergency_service.Enums.Priority;
 
 public class ResponderAssignedEvent {
     
@@ -14,16 +15,18 @@ public class ResponderAssignedEvent {
     private double distanceKm;
     private AssignmentStatus status;
     private LocalDateTime assignedAt;
+    private Priority priority;
    
     public ResponderAssignedEvent(){
 
     }
-    public ResponderAssignedEvent(UUID emergencyId,UUID responderId,double distanceKm,AssignmentStatus status,LocalDateTime assignedAt){
+    public ResponderAssignedEvent(UUID emergencyId,UUID responderId,double distanceKm,AssignmentStatus status,LocalDateTime assignedAt,Priority priority){
         this.emergencyId=emergencyId;
         this.responderId=responderId;       
         this.distanceKm=distanceKm;
         this.status=status;
         this.assignedAt=assignedAt;
+        this.priority=priority;
     }
 
     public UUID getEmergencyId() {
@@ -65,6 +68,12 @@ public class ResponderAssignedEvent {
     public void setAssignedAt(LocalDateTime assignedAt) {
         this.assignedAt = assignedAt;
     }
-
+    public Priority getPriority() {
+        return priority;
+    }
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+    
 }
 
