@@ -65,4 +65,17 @@ public class RabbitMQconfig {
                              .to(EmergencyPriorityUpdateEvent)
                              .with(RabbitMQconstant.RESPONDER_ASSIGNED_ROUTING_KEY);
     }
+
+    @Bean
+    public Queue locationUpdatedQueue(){
+        return QueueBuilder.durable(RabbitMQconstant.LOCATION_UPDATE_QUEUE).build();
+    }
+
+
+    @Bean
+    public Binding locationUpdateBinding(TopicExchange EmergencyPriorityUpdatedEvent,Queue locationUpdatedQueue){
+        return BindingBuilder.bind(locationUpdatedQueue)
+                             .to(EmergencyPriorityUpdatedEvent)
+                             .with(RabbitMQconstant.LOCATION_UPDATED_ROUTING_KEY);
+    }
 }
