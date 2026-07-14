@@ -8,6 +8,7 @@ import com.responder_service.service.ResponderService;
 
 
 @Component
+
 public class ResponderAssignedEventConsumer {
     
    private final ResponderService service;

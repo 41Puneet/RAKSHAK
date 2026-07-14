@@ -31,5 +31,8 @@ public class RabbitMQconfig {
         .with(RabbitMQconstant.HOSPITAL_ASSIGNED_ROUTING_KEY);
     }
 
-    
+    @Bean
+    public Queue emergencyPriorityUpdatedQueue(){
+        return QueueBuilder.durable(RabbitMQconstant.RESPONDER_ASSIGNED_QUEUE).build();
+    }
 }

@@ -1,4 +1,4 @@
-package com.emergency_service.Enums;
+package com.responder_service.Enums;
 
 public enum Status {
     CREATED,
@@ -6,5 +6,4 @@ public enum Status {
     ASSIGNED,
     ACCEPTED,
     COMPLETED,
-  
 }

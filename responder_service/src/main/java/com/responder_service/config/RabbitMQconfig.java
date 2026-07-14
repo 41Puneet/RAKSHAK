@@ -71,7 +71,6 @@ public class RabbitMQconfig {
         return QueueBuilder.durable(RabbitMQconstant.LOCATION_UPDATE_QUEUE).build();
     }
 
-
     @Bean
     public Binding locationUpdateBinding(TopicExchange EmergencyPriorityUpdatedEvent,Queue locationUpdatedQueue){
         return BindingBuilder.bind(locationUpdatedQueue)
