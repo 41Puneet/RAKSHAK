@@ -55,4 +55,15 @@ public Binding emergencyCreatedBinding(
             .to(emergencyExchange)
             .with(RabbitMqConstant.EMERGENCY_CREATED_ROUTING_KEY);
 }
+
+@Bean
+public Queue locationUpdatedQueue(){
+    return QueueBuilder.durable(RabbitMqConstant.LOCATION_UPDATE_QUEUE).build();
+}
+
+public Binding locationUpdateBinding(Queue locationUpdatedQueue,TopicExchange emergencyExchange){
+    return BindingBuilder.bind(locationUpdatedQueue())
+                         .to(emergencyExchange)
+                         .with(RabbitMqConstant.LOCATION_UPDATED_ROUTING_KEY);
+}
 }

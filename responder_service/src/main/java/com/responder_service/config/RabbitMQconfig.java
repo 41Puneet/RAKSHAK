@@ -53,4 +53,16 @@ public class RabbitMQconfig {
                              .to(EmergencyPriorityUpdatedEvent)
                              .with(RabbitMQconstant.HOSPITAL_ASSIGNED_ROUTING_KEY);
     }
+    @Bean
+    public Queue responderAssignedQueue(){
+        return QueueBuilder.durable(RabbitMQconstant.RESPONDER_ASSIGNED_QUEUE).build();
+
+    }
+
+    @Bean
+    public Binding responderAssignedBinding(TopicExchange EmergencyPriorityUpdateEvent,Queue responderAssignedQueue){
+        return BindingBuilder.bind(responderAssignedQueue)
+                             .to(EmergencyPriorityUpdateEvent)
+                             .with(RabbitMQconstant.RESPONDER_ASSIGNED_ROUTING_KEY);
+    }
 }

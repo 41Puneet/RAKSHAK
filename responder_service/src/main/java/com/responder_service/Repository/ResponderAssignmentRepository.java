@@ -32,4 +32,6 @@ public interface ResponderAssignmentRepository
     Optional<ResponderAssignment> findById(UUID AssignmentId);
 
     Optional<ResponderAssignment> findByEmergencyIdAndStatus(UUID emergencyId, UUID responderId, Assignment_Status status);
+
+    Optional<ResponderAssignment>findByResponderId(UUID responderId);
 }

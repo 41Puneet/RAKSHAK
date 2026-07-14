@@ -60,8 +60,7 @@ public class DispatchServiceImpl implements DispatchService {
         ResponderLocation responder =
                 responderSelectionService.findNearestAvailableResponder(
                         event.getLatitude(),
-                        event.getLongitude());
-                      
+                        event.getLongitude()); 
 
         if (responder == null) {
             saveDispatchLog(event.getEmergencyId(),
