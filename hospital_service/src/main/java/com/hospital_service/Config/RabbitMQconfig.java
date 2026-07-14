@@ -30,4 +30,6 @@ public class RabbitMQconfig {
         .to(EmergencyExchange)
         .with(RabbitMQconstant.HOSPITAL_ASSIGNED_ROUTING_KEY);
     }
+
+    
 }

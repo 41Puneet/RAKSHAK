@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.responder_service.Enums.Assignment_Status;
+import com.responder_service.Enums.Priority;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,6 +30,9 @@ public class ResponderAssignment {
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
     private Assignment_Status status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable=false)
+    private Priority priority;
     @Column(nullable=false)
     private LocalDateTime assignedAt;
     @Column(nullable=false)
@@ -50,7 +54,7 @@ public class ResponderAssignment {
     public void setResponder(Responder responder) {
         this.responder = responder;
     }
-    public ResponderAssignment(Responder responder,UUID id,UUID emergencyId,Assignment_Status status,LocalDateTime assignedAt,LocalDateTime acceptedAt,LocalDateTime reachedAt,LocalDateTime completedAt){
+    public ResponderAssignment(Responder responder,UUID id,UUID emergencyId,Assignment_Status status,LocalDateTime assignedAt,LocalDateTime acceptedAt,LocalDateTime reachedAt,LocalDateTime completedAt,Priority priority){
         this.responder=responder;
         this.id=id;
         this.emergencyId=emergencyId;
@@ -59,6 +63,7 @@ public class ResponderAssignment {
         this.acceptedAt=acceptedAt;
         this.reachedAt=reachedAt;
         this.completedAt=completedAt;
+        this.priority=priority;
     }
     public UUID getId() {
         return id;
@@ -101,6 +106,12 @@ public class ResponderAssignment {
     }
     public void setCompletedAt(LocalDateTime completedAt) {
         this.completedAt = completedAt;
+    }
+    public Priority getPriority() {
+        return priority;
+    }
+    public void setPriority(Priority priority) {
+        this.priority = priority;
     }
     
 }

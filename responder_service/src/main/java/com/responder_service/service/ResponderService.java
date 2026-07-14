@@ -12,11 +12,13 @@ import com.responder_service.DTO.request.CompleteAssignmentRequest;
 import com.responder_service.DTO.request.CreateResponderRequest;
 import com.responder_service.DTO.request.RegisterVehicleRequest;
 import com.responder_service.DTO.request.UpdateAvailabilityRequest;
+import com.responder_service.DTO.request.UpdatePriorityStatus;
 import com.responder_service.DTO.request.UpdateResponder;
 import com.responder_service.DTO.request.UpdateVehicleRequest;
 import com.responder_service.DTO.response.AssignmentResponse;
 import com.responder_service.DTO.response.AvailabilityHistoryResponse;
 import com.responder_service.DTO.response.LocationHistoryResponse;
+import com.responder_service.DTO.response.PriorityResponse;
 import com.responder_service.DTO.response.ResponderResponse;
 import com.responder_service.DTO.response.VehicleResponse;
 import com.responder_service.Enums.Assignment_Status;
@@ -50,6 +52,10 @@ AssignmentResponse getAssignmentById(UUID assignmentId);
 
 VehicleResponse getVehicleByResponder(UUID responderId);
 
+AssignmentResponse updatePriorityofEmergency(UUID emegencyId,UUID responderId,Assignment_Status status,UpdatePriorityStatus request);
+
+
+
 
 // for the control room
 Page<AssignmentResponse> getAssignmentResponseByResponderId(UUID responderId,Pageable pageable);
@@ -65,5 +71,7 @@ LocationHistoryResponse getByResponderIdAndTime(UUID responderId);
 Page<LocationHistoryResponse> getByTimeBetween(LocalDateTime start,LocalDateTime end,Pageable pageable);
 
 Page<VehicleResponse> getByActiveVehicle(boolean active,Pageable pageable);
+
+
 
 }

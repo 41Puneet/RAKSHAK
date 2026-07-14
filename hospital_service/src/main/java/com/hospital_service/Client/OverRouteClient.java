@@ -1,7 +1,6 @@
 package com.hospital_service.Client;
 
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class OpenRouteClient {
+public class OverRouteClient {
 
     private final RestTemplate restTemplate;
 
@@ -20,7 +19,7 @@ public class OpenRouteClient {
     @Value("${openroute.url}")
     private String openRouteUrl;
 
-    public OpenRouteClient(RestTemplate restTemplate) {
+    public OverRouteClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

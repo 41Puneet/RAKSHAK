@@ -30,4 +30,6 @@ public interface ResponderAssignmentRepository
     boolean existsByEmergencyId(UUID emergencyId);
 
     Optional<ResponderAssignment> findById(UUID AssignmentId);
+
+    Optional<ResponderAssignment> findByEmergencyIdAndStatus(UUID emergencyId, UUID responderId, Assignment_Status status);
 }

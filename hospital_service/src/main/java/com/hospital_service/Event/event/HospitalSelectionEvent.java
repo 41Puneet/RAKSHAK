@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.apache.tomcat.util.http.parser.Priority;
 
-import com.hospital_service.enums.EmergencyType;
+import com.hospital_service.Enum.EmergencyType;
 
 public class HospitalSelectionEvent {
     
@@ -28,7 +28,7 @@ public class HospitalSelectionEvent {
     private Double latitude;
     private Double longitude;
 
-    // Navigation
+    
     private Double distanceInKm;
     private Double etaInMinutes;
     private String routeGeometry;       // optional

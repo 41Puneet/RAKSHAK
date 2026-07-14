@@ -14,11 +14,13 @@ import com.responder_service.DTO.request.CompleteAssignmentRequest;
 import com.responder_service.DTO.request.CreateResponderRequest;
 import com.responder_service.DTO.request.RegisterVehicleRequest;
 import com.responder_service.DTO.request.UpdateAvailabilityRequest;
+import com.responder_service.DTO.request.UpdatePriorityStatus;
 import com.responder_service.DTO.request.UpdateResponder;
 import com.responder_service.DTO.request.UpdateVehicleRequest;
 import com.responder_service.DTO.response.AssignmentResponse;
 import com.responder_service.DTO.response.AvailabilityHistoryResponse;
 import com.responder_service.DTO.response.LocationHistoryResponse;
+import com.responder_service.DTO.response.PriorityResponse;
 import com.responder_service.DTO.response.ResponderResponse;
 import com.responder_service.DTO.response.VehicleResponse;
 import com.responder_service.Entity.ResponderAssignment;
@@ -33,6 +35,8 @@ import com.responder_service.Repository.ResponderAvailabilityRepository;
 import com.responder_service.Repository.ResponderLocationHistoryRepository;
 import com.responder_service.Repository.ResponderRepository;
 import com.responder_service.Repository.ResponderVehicleRepository;
+import com.responder_service.event.model.EmergencyPriorityUpdatedEvent;
+import com.responder_service.event.publish.PriorityUpdatedEventProducer;
 import com.responder_service.Entity.ResponderVehicle;
 import com.responder_service.Entity.Responder;
 import com.responder_service.service.ResponderService;
@@ -49,13 +53,15 @@ private final ResponderRepository responderRepository;
 private final ResponderVehicleRepository vehicleRepository;
 private final ResponderMapper mapper;
 private static final Logger logger=LoggerFactory.getLogger(ResponderServiceImpl.class);
-public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, ResponderAvailabilityRepository availabilityRepository, ResponderLocationHistoryRepository locationRepository, ResponderRepository responderRepository, ResponderVehicleRepository vehicleRepository, ResponderMapper mapper) {
+private final PriorityUpdatedEventProducer producer;
+public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, ResponderAvailabilityRepository availabilityRepository, ResponderLocationHistoryRepository locationRepository, ResponderRepository responderRepository, ResponderVehicleRepository vehicleRepository, ResponderMapper mapper,PriorityUpdatedEventProducer producer) {
     this.assignmentRepository = assignmentRepository;
     this.availabilityRepository = availabilityRepository;
     this.locationRepository = locationRepository;
     this.responderRepository = responderRepository;
     this.vehicleRepository = vehicleRepository;
     this.mapper = mapper;
+    this.producer=producer;
 }
     @Override
     public AssignmentResponse assignResponder(AssignResponderRequest request) {
@@ -250,6 +256,28 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
         responderVehicle.setActive(request.isActive());
         ResponderVehicle updatedVehicle = vehicleRepository.save(responderVehicle);
         return mapper.toVehicleResponse(updatedVehicle);
+    }
+    @Override
+    public AssignmentResponse updatePriorityofEmergency(UUID emegencyId, UUID responderId,Assignment_Status status,UpdatePriorityStatus request) {
+        Optional<ResponderAssignment> assignment=assignmentRepository.findByEmergencyIdAndStatus(emegencyId, responderId, Assignment_Status.ARRIVED);
+        if(assignment.isPresent()){
+            ResponderAssignment updateAssignment=assignment.get();
+           updateAssignment.setPriority(request.getPriority());
+           ResponderAssignment savedAssignment=assignmentRepository.save(updateAssignment);
+           EmergencyPriorityUpdatedEvent event=toEmergencyPriorityUpdatedEvent(savedAssignment);
+           producer.publishPriorityUpdatedEvent(event);
+           return mapper.toAssignmentResponse(savedAssignment);
+        }
+        throw new IllegalArgumentException("Assignment not found");
+    }
+    
+    private EmergencyPriorityUpdatedEvent toEmergencyPriorityUpdatedEvent(ResponderAssignment assignment) {
+        EmergencyPriorityUpdatedEvent event = new EmergencyPriorityUpdatedEvent();
+        event.setEmergencyId(assignment.getEmergencyId());
+        event.setResponderId(assignment.getResponderId());
+        event.setPriority(assignment.getPriority());
+        event.setTimestamp(LocalDateTime.now());
+        return event;
     }
     
 }

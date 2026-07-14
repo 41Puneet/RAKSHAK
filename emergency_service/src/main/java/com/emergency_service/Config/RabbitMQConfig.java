@@ -1,4 +1,4 @@
-package com.emergency_service.Config;
+epackage com.emergency_service.Config;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;

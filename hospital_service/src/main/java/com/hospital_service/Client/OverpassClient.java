@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class OpenpassClient {
+public class OverpassClient {
 
     private final RestTemplate restTemplate;
 
@@ -15,7 +15,7 @@ public class OpenpassClient {
     @Value("${overpass.radius}")
     private Integer radius;
 
-    public OpenpassClient(RestTemplate restTemplate) {
+    public OverpassClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
