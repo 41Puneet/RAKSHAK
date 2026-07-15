@@ -27,12 +27,20 @@ public class RabbitMQconfig {
     @Bean
     public Binding HospitalAssignedBinding(Queue HospitalAssignedQueue,TopicExchange EmergencyExchange){
         return BindingBuilder.bind(HospitalAssignedQueue)
-        .to(EmergencyExchange)
-        .with(RabbitMQconstant.HOSPITAL_ASSIGNED_ROUTING_KEY);
+                             .to(EmergencyExchange)
+                             .with(RabbitMQconstant.HOSPITAL_ASSIGNED_ROUTING_KEY);
     }
 
     @Bean
     public Queue emergencyPriorityUpdatedQueue(){
         return QueueBuilder.durable(RabbitMQconstant.RESPONDER_ASSIGNED_QUEUE).build();
+    }
+
+    @Bean
+    public Binding emergencyPriorityUpdateBinding(TopicExchange emergencyExchange,Queue emergencyPriorityUpdateQueue){
+       return BindingBuilder.bind(emergencyPriorityUpdateQueue)
+                            .to(emergencyExchange)
+                            .with(RabbitMQconstant.EMERGENCY_PRIORITY_UPDATED_ROUTING_KEY);
+
     }
 }

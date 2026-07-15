@@ -41,5 +41,85 @@ public class HospitalSelectionEvent {
     this.etaInMinutes=etaInMinutes;
   }
 
+  public UUID getEmergencyId() {
+    return emergencyId;
+  }
+
+  public void setEmergencyId(UUID emergencyId) {
+    this.emergencyId = emergencyId;
+  }
+
+  public UUID getResponderId() {
+    return responderId;
+  }
+
+  public void setResponderId(UUID responderId) {
+    this.responderId = responderId;
+  }
+
+  public EmergencyType getEmergencyType() {
+    return emergencyType;
+  }
+
+  public void setEmergencyType(EmergencyType emergencyType) {
+    this.emergencyType = emergencyType;
+  }
+
+  public Priority getPriority() {
+    return priority;
+  }
+
+  public void setPriority(Priority priority) {
+    this.priority = priority;
+  }
+
+  public String getHospitalName() {
+    return hospitalName;
+  }
+
+  public void setHospitalName(String hospitalName) {
+    this.hospitalName = hospitalName;
+  }
+
+  public String getHospitalAddress() {
+    return hospitalAddress;
+  }
+
+  public void setHospitalAddress(String hospitalAddress) {
+    this.hospitalAddress = hospitalAddress;
+  }
+
+  public Double getLatitude() {
+    return latitude;
+  }
+
+  public void setLatitude(Double latitude) {
+    this.latitude = latitude;
+  }
+
+  public Double getLongitude() {
+    return longitude;
+  }
+
+  public void setLongitude(Double longitude) {
+    this.longitude = longitude;
+  }
+
+  public Double getDistanceInKm() {
+    return distanceInKm;
+  }
+
+  public void setDistanceInKm(Double distanceInKm) {
+    this.distanceInKm = distanceInKm;
+  }
+
+  public Double getEtaInMinutes() {
+    return etaInMinutes;
+  }
+
+  public void setEtaInMinutes(Double etaInMinutes) {
+    this.etaInMinutes = etaInMinutes;
+  }
+
 }
 

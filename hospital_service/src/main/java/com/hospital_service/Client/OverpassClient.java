@@ -4,22 +4,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.hospital_service.Config.OverpassProperties;
+
 @Component
 public class OverpassClient {
 
+
     private final RestTemplate restTemplate;
+    private final OverpassProperties properties;
 
-    @Value("${overpass.url}")
-    private String overpassUrl;
+public OverpassClient(RestTemplate restTemplate,
+                      OverpassProperties properties){
+    this.restTemplate = restTemplate;
+    this.properties = properties;
+}
 
-    @Value("${overpass.radius}")
-    private Integer radius;
-
-    public OverpassClient(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-
-    public void getNearbyHospitals(double latitude, double longitude) {
+    public String getNearbyHospitals(double latitude, double longitude) {
 
         String query = String.format("""
                 [out:json];
@@ -30,16 +30,16 @@ public class OverpassClient {
                 );
                 out center;
                 """,
-                radius, latitude, longitude,
-                radius, latitude, longitude,
-                radius, latitude, longitude);
+                properties.getRadius(), latitude, longitude,
+                properties.getRadius(), latitude, longitude,
+                properties.getRadius(), latitude, longitude);
 
         String response = restTemplate.postForObject(
-                overpassUrl,
+                properties.getUrl(),
                 query,
                 String.class
         );
 
-        System.out.println(response);
+      return response;
     }
 }
