@@ -17,4 +17,5 @@ public class HospitalEventProducer {
     public void publishHospitalEvent(HospitalSelectionEvent event){
         rabbitTemplate.convertAndSend(RabbitMQconstant.EMERGENCY_EXCHANGE, RabbitMQconstant.HOSPITAL_ASSIGNED_ROUTING_KEY, event);
     }
+
 }

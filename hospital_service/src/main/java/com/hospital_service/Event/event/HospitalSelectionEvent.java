@@ -8,7 +8,7 @@ import com.hospital_service.Enum.EmergencyType;
 
 public class HospitalSelectionEvent {
     
-    public class HospitalSelectedEvent {
+  
 
     private UUID emergencyId;
 
@@ -18,20 +18,28 @@ public class HospitalSelectionEvent {
 
     private Priority priority;
 
-    // Hospital Details
-    private String hospitalId;          // OpenStreetMap id or provider id
     private String hospitalName;
     private String hospitalAddress;
-    private String hospitalPhoneNumber; // if available
-
-    // Location
+    
     private Double latitude;
     private Double longitude;
 
     
     private Double distanceInKm;
     private Double etaInMinutes;
-    private String routeGeometry;       // optional
+  
+  public HospitalSelectionEvent(UUID emergencyId,UUID responderId,EmergencyType emergencyType,Priority priority,String hospitalName,String hospitalAddress,Double latitude,Double longitude,Double distanceInKm,Double etaInMinutes){
+    this.emergencyId=emergencyId;
+    this.responderId=responderId;
+    this.emergencyType=emergencyType;
+    this.priority=priority;
+    this.hospitalAddress=hospitalAddress;
+    this.hospitalName=hospitalName;
+    this.latitude=latitude;
+    this.longitude=longitude;
+    this.distanceInKm=distanceInKm;
+    this.etaInMinutes=etaInMinutes;
+  }
 
 }
-}
+
