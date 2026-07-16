@@ -1,18 +1,151 @@
 package com.hospital_service.ServiceImpl;
-import com.hospital_service.DTO.Request.HospitalSearchRequest;
+
+import java.util.Comparator;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hospital_service.Client.OverRouteClient;
+import com.hospital_service.Client.OverpassClient;
 import com.hospital_service.DTO.Response.HospitalResponse;
+import com.hospital_service.DTO.Response.OverpassResponse;
+import com.hospital_service.Event.Publisher.HospitalEventProducer;
 import com.hospital_service.Event.event.EmergencyPriorityUpdatedEvent;
+import com.hospital_service.Event.event.HospitalSelectionEvent;
 import com.hospital_service.Service.HospitalService;
+import com.hospital_service.DTO.Request.RouteResponse;
+import com.hospital_service.DTO.Request.Summary;
+import com.hospital_service.DTO.Response.Element;
+import com.hospital_service.DTO.Response.Tags;
 
-public class HospitalServiceImpl implements HospitalService {
+@Service
+public class HospitalServiceImpl implements HospitalService{
 
+
+    private final OverpassClient overpassClient;
+    private final OverRouteClient overRouteClient;
+    private final HospitalEventProducer producer;
+    private final ObjectMapper objectMapper;
+
+     public HospitalServiceImpl(
+            OverpassClient overpassClient,
+            OverRouteClient overRouteClient,
+            HospitalEventProducer producer,
+            ObjectMapper objectMapper) {
+
+        this.overpassClient = overpassClient;
+        this.overRouteClient = overRouteClient;
+        this.producer = producer;
+        this.objectMapper = objectMapper;
+    }
     @Override
     public HospitalResponse findNearestHospital(EmergencyPriorityUpdatedEvent event) {
-        
-        return null;
+        List<HospitalResponse>hospitals=getNearbyHospitals(event);
+        HospitalResponse nearestHospital=findBestHospital(hospitals, event.getLatitude(), event.getLongitude());
+        HospitalSelectionEvent selectionEvent=buildHospitalAssignedEvent(event, nearestHospital);
+        producer.publishHospitalEvent(selectionEvent);
+        return nearestHospital;
     }
-    private HospitalResponse filterHospital(HospitalSearchRequest request){
-        return mapper.toHospital
+    private List<HospitalResponse> getNearbyHospitals(
+        EmergencyPriorityUpdatedEvent event) {
+            try{
+           String jsonResponse=overpassClient.getNearbyHospitals(event.getLatitude(), event.getLongitude());
+           OverpassResponse overpassResponse=objectMapper.readValue(jsonResponse, OverpassResponse.class);
+            return overpassResponse.getElements()
+        .stream()
+        .map(this::mapToHospitalResponse)
+        .toList();
+            
+        }
+            catch(Exception e){
+                throw new RuntimeException("Failed to fetch nearby hospitals",e);
+            }
+}
+ private HospitalResponse findBestHospital(
+        List<HospitalResponse> hospitals,
+        Double latitude,
+        Double longitude) {
+            if(hospitals==null||hospitals.isEmpty()){
+                throw new IllegalArgumentException("No nearby hospitals found");
+            }
+            for(HospitalResponse hospital:hospitals){
+                String routeJson = overRouteClient.getRoute(latitude, longitude, hospital.getLatitude(), hospital.getLongitude());
+                RouteResponse routeResponse;
+                try{
+                    routeResponse=objectMapper.readValue(routeJson, RouteResponse.class);
+                }
+                catch(Exception e){
+                    throw new RuntimeException("Unable to parse OpenRoute response",e);
+                }
+                Summary summary=routeResponse.getFeatures()
+                        .get(0)
+                        .getProperties()
+                        .getSummary();
+                        hospital.setDistance(summary.getDistance()/1000);
+                        hospital.setEta(summary.getDuration()/60);
+            }
+            // fallback: return first hospital as the best available
+            return hospitals.stream()
+                            .min(Comparator.comparing(HospitalResponse::getEta))
+                            .orElseThrow(()-> new IllegalArgumentException("No suitable hospital found"));
+}
+private HospitalSelectionEvent buildHospitalAssignedEvent(
+        EmergencyPriorityUpdatedEvent event,
+        HospitalResponse hospital) {
+    return new HospitalSelectionEvent(
+            java.util.UUID.randomUUID(),
+            event.getEmergencyId(),
+            null,
+            null,
+            hospital.getHospitalName(),
+            hospital.getAddress(),
+            hospital.getLatitude(),
+            hospital.getLongitude(),
+            event.getLatitude(),
+            event.getLongitude());
+}
+private HospitalResponse mapToHospitalResponse(Element element) {
+
+    HospitalResponse response = new HospitalResponse();
+
+    response.setHospitalName(
+            element.getTags().getName());
+
+    response.setLatitude(
+            element.getLat());
+
+    response.setLongitude(
+            element.getLon());
+
+    Tags tags = element.getTags();
+
+    StringBuilder address = new StringBuilder();
+
+    if (tags.getStreet() != null) {
+        address.append(tags.getStreet());
     }
-    
+
+    if (tags.getCity() != null) {
+
+        if (!address.isEmpty()) {
+            address.append(", ");
+        }
+
+        address.append(tags.getCity());
+    }
+
+    if (tags.getPostcode() != null) {
+
+        if (!address.isEmpty()) {
+            address.append(", ");
+        }
+
+        address.append(tags.getPostcode());
+    }
+
+    response.setAddress(address.toString());
+
+    return response;
+}
 }
