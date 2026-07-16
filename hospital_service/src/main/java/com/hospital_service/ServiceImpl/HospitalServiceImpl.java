@@ -18,6 +18,7 @@ import com.hospital_service.DTO.Request.RouteResponse;
 import com.hospital_service.DTO.Request.Summary;
 import com.hospital_service.DTO.Response.Element;
 import com.hospital_service.DTO.Response.Tags;
+import com.hospital_service.Enum.EmergencyType;
 
 @Service
 public class HospitalServiceImpl implements HospitalService{
@@ -96,7 +97,7 @@ private HospitalSelectionEvent buildHospitalAssignedEvent(
     return new HospitalSelectionEvent(
             java.util.UUID.randomUUID(),
             event.getEmergencyId(),
-            null,
+            EmergencyType.AMBULANCE,
             null,
             hospital.getHospitalName(),
             hospital.getAddress(),

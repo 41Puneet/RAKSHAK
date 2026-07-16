@@ -1,5 +1,7 @@
 package com.hospital_service.DTO.Request;
 
+import com.hospital_service.DTO.Request.Properties;
+
 public class Features {
     
     private Properties properties;
