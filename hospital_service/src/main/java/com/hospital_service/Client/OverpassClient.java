@@ -1,6 +1,6 @@
 package com.hospital_service.Client;
 
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,17 +22,17 @@ public OverpassClient(RestTemplate restTemplate,
     public String getNearbyHospitals(double latitude, double longitude) {
 
         String query = String.format("""
-                [out:json];
-                (
-                  node["amenity"="hospital"](around:%d,%f,%f);
-                  way["amenity"="hospital"](around:%d,%f,%f);
-                  relation["amenity"="hospital"](around:%d,%f,%f);
-                );
-                out center;
-                """,
-                properties.getRadius(), latitude, longitude,
-                properties.getRadius(), latitude, longitude,
-                properties.getRadius(), latitude, longitude);
+[out:json][timeout:20];
+(
+  node["amenity"="hospital"](around:%d,%f,%f);
+  way["amenity"="hospital"](around:%d,%f,%f);
+  relation["amenity"="hospital"](around:%d,%f,%f);
+);
+out center qt;
+""",
+properties.getRadius(), latitude, longitude,
+properties.getRadius(), latitude, longitude,
+properties.getRadius(), latitude, longitude);
 
         String response = restTemplate.postForObject(
                 properties.getUrl(),

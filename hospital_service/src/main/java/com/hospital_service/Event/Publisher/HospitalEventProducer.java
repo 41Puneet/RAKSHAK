@@ -1,10 +1,12 @@
 package com.hospital_service.Event.Publisher;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.stereotype.Component;
 
 import com.hospital_service.Event.RabbitMqConstant.RabbitMQconstant;
 import com.hospital_service.Event.event.HospitalSelectionEvent;
 
+@Component
 public class HospitalEventProducer {
     
 

@@ -1,6 +1,6 @@
-package com.hospital_service.DTO.Request;
+package com.hospital_service.DTO.Response;
 
-import com.hospital_service.DTO.Request.Properties;
+import com.hospital_service.DTO.Response.Properties;
 
 public class Features {
     

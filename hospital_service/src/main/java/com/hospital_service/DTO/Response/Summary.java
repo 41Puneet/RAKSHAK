@@ -1,4 +1,4 @@
-package com.hospital_service.DTO.Request;
+package com.hospital_service.DTO.Response;
 
 public class Summary {
     

@@ -6,11 +6,13 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 
 import com.hospital_service.Event.RabbitMqConstant.RabbitMQconstant;
 
-@Component
+@Configuration
 public class RabbitMQconfig {
     
 
@@ -25,7 +27,9 @@ public class RabbitMQconfig {
     }
 
     @Bean
-    public Binding HospitalAssignedBinding(Queue HospitalAssignedQueue,TopicExchange EmergencyExchange){
+    public Binding HospitalAssignedBinding(
+        @Qualifier("HospitalAssignedQueue") Queue HospitalAssignedQueue,
+        @Qualifier("EmergencyExchange") TopicExchange EmergencyExchange){
         return BindingBuilder.bind(HospitalAssignedQueue)
                              .to(EmergencyExchange)
                              .with(RabbitMQconstant.HOSPITAL_ASSIGNED_ROUTING_KEY);
@@ -33,11 +37,13 @@ public class RabbitMQconfig {
 
     @Bean
     public Queue emergencyPriorityUpdatedQueue(){
-        return QueueBuilder.durable(RabbitMQconstant.RESPONDER_ASSIGNED_QUEUE).build();
+        return QueueBuilder.durable(RabbitMQconstant.EMERGENCY_PRIORITY_UPDATED_QUEUE).build();
     }
 
     @Bean
-    public Binding emergencyPriorityUpdateBinding(TopicExchange emergencyExchange,Queue emergencyPriorityUpdateQueue){
+    public Binding emergencyPriorityUpdateBinding(
+        @Qualifier("EmergencyExchange") TopicExchange emergencyExchange,
+        @Qualifier("emergencyPriorityUpdatedQueue") Queue emergencyPriorityUpdateQueue){
        return BindingBuilder.bind(emergencyPriorityUpdateQueue)
                             .to(emergencyExchange)
                             .with(RabbitMQconstant.EMERGENCY_PRIORITY_UPDATED_ROUTING_KEY);

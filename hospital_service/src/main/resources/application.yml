@@ -4,6 +4,10 @@ server:
 spring:
   application:
     name: hospital-service
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration
+      - org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration
 
   rabbitmq:
     host: localhost
@@ -13,14 +17,15 @@ spring:
 
 openroute:
   api-key: eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjU2ZjkyYjg0ZjRmMjQ2MTdhN2QzZjliODQ5MDA2Y2U4IiwiaCI6Im11cm11cjY0In0=
-  url: https://api.openrouteservice.org/v2/directions/driving-car
+  url: https://api.openrouteservice.org/v2/directions/driving-car/geojson
 
 eureka:
   client:
+    enabled: false
     service-url:
       defaultZone: http://localhost:8761/eureka/
 
 
 overpass:
-  url: https://overpass-api.de/api/interpreter
-  radius: 10000
+  url: https://overpass.kumi.systems/api/interpreter
+  radius: 500
