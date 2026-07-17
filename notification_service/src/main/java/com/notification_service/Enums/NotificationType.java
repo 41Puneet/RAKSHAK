@@ -1,0 +1,22 @@
+package com.notification_service.Enums;
+
+public enum NotificationType {
+
+    EMERGENCY_CREATED,
+
+    RESPONDER_ASSIGNED,
+
+    RESPONDER_EN_ROUTE,
+
+    RESPONDER_ARRIVED,
+
+    HOSPITAL_ASSIGNED,
+
+    EMERGENCY_COMPLETED,
+
+    EMERGENCY_CANCELLED,
+
+    STATUS_UPDATED,
+
+    SYSTEM_NOTIFICATION
+}

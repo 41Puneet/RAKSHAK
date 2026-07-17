@@ -17,7 +17,7 @@ public class EmergencyPriorityUpdateConsumer {
         this.service=service;
     }
 
-   // @RabbitListener(queues=RabbitMQconstant.EMERGENCY_PRIORITY_UPDATED_QUEUE)
+   @RabbitListener(queues=RabbitMQconstant.EMERGENCY_PRIORITY_UPDATED_QUEUE)
     public void priorityUpdateConsumer(EmergencyPriorityUpdatedEvent event){
 
         service.findNearestHospital(event);

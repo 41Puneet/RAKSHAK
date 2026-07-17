@@ -1,7 +1,5 @@
 package com.hospital_service.DTO.Response;
 
-import com.hospital_service.DTO.Response.Properties;
-
 public class Features {
     
     private Properties properties;

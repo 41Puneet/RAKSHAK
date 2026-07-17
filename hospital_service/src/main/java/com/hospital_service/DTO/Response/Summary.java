@@ -1,5 +1,7 @@
 package com.hospital_service.DTO.Response;
 
+
+
 public class Summary {
     
     private Double distance;

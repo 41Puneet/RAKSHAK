@@ -42,7 +42,7 @@ public class HospitalServiceImpl implements HospitalService{
     }
     @Override
    public HospitalResponse findNearestHospital(EmergencyPriorityUpdatedEvent event) {
-    try {
+    
 
         List<HospitalResponse> hospitals = getNearbyHospitals(event);
 
@@ -58,11 +58,8 @@ public class HospitalServiceImpl implements HospitalService{
 
         return nearestHospital;
 
-    } catch (Exception e) {
-        e.printStackTrace();
-        throw e;
-    }
-}
+    } 
+
     private List<HospitalResponse> getNearbyHospitals(
         EmergencyPriorityUpdatedEvent event) {
             try{
@@ -85,9 +82,9 @@ public class HospitalServiceImpl implements HospitalService{
             for(HospitalResponse hospital:hospitals){
                 
                 String routeJson = overRouteClient.getRoute(latitude, longitude, hospital.getLatitude(), hospital.getLongitude());
-                System.out.println(routeJson);
+               
                 RouteResponse routeResponse;
-                System.out.println(routeJson);
+               
                 try{
                     routeResponse=objectMapper.readValue(routeJson, RouteResponse.class);
                 }
