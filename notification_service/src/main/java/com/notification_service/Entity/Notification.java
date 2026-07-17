@@ -17,7 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 @Entity
-@Table(name="notificationss")
+@Table(name="notifications")
 public class Notification {
 @Id
 @GeneratedValue(strategy = GenerationType.UUID)
@@ -27,6 +27,7 @@ private UUID receiverId;
 @Enumerated(EnumType.STRING)
 @Column(nullable=false)
 private ReceiverType receiverType;
+@Column(nullable=false)
 private String title;
 @Column(nullable=false)
 private String message;
