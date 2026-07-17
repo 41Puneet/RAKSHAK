@@ -10,6 +10,4 @@ import com.notification_service.Entity.NotificationLogs;
 public interface NotificationLogRepository extends JpaRepository<NotificationLogs,UUID> {
     
     List<NotificationLogs> findByNotificationId(UUID notificationId);
-
-    List<NotificationLogs> findByNotificationId(UUID notificationId);
 }

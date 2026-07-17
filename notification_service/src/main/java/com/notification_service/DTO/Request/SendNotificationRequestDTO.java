@@ -1,55 +1,49 @@
-package com.notification_service.DTO.Response;
+package com.notification_service.DTO.Request;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.notification_service.Enums.DeliveryChannel;
-import com.notification_service.Enums.NotificationStatus;
 import com.notification_service.Enums.NotificationType;
 import com.notification_service.Enums.ReceiverType;
 
-public class NotificationResponseDTO {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-    private UUID id;
+public class SendNotificationRequestDTO {
+
+    @NotNull(message = "receiverId is required")
     private UUID receiverId;
-    private ReceiverType receiverType;
-    private String title;
-    private String message;
-    private NotificationType notificationType;
-    private DeliveryChannel deliveryChannel;
-    private NotificationStatus notificationStatus;
-    private UUID referenceId;
-    private LocalDateTime createdAt;
-    private LocalDateTime sentAt;
-    private LocalDateTime readAt;
 
-    public NotificationResponseDTO() {
+    @NotNull(message = "receiverType is required")
+    private ReceiverType receiverType;
+
+    @NotBlank(message = "title is required")
+    private String title;
+
+    @NotBlank(message = "message is required")
+    private String message;
+
+    @NotNull(message = "notificationType is required")
+    private NotificationType notificationType;
+
+    @NotNull(message = "deliveryChannel is required")
+    private DeliveryChannel deliveryChannel;
+
+    @NotNull(message = "referenceId is required")
+    private UUID referenceId;
+
+    public SendNotificationRequestDTO() {
     }
 
-    public NotificationResponseDTO(UUID id, UUID receiverId, ReceiverType receiverType, String title, String message,
-            NotificationType notificationType, DeliveryChannel deliveryChannel,
-            NotificationStatus notificationStatus, UUID referenceId, LocalDateTime createdAt, LocalDateTime sentAt,
-            LocalDateTime readAt) {
-        this.id = id;
+    public SendNotificationRequestDTO(UUID receiverId, ReceiverType receiverType, String title, String message,
+            NotificationType notificationType, DeliveryChannel deliveryChannel, UUID referenceId) {
         this.receiverId = receiverId;
         this.receiverType = receiverType;
         this.title = title;
         this.message = message;
         this.notificationType = notificationType;
         this.deliveryChannel = deliveryChannel;
-        this.notificationStatus = notificationStatus;
         this.referenceId = referenceId;
-        this.createdAt = createdAt;
-        this.sentAt = sentAt;
-        this.readAt = readAt;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public UUID getReceiverId() {
@@ -100,43 +94,11 @@ public class NotificationResponseDTO {
         this.deliveryChannel = deliveryChannel;
     }
 
-    public NotificationStatus getNotificationStatus() {
-        return notificationStatus;
-    }
-
-    public void setNotificationStatus(NotificationStatus notificationStatus) {
-        this.notificationStatus = notificationStatus;
-    }
-
     public UUID getReferenceId() {
         return referenceId;
     }
 
     public void setReferenceId(UUID referenceId) {
         this.referenceId = referenceId;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getSentAt() {
-        return sentAt;
-    }
-
-    public void setSentAt(LocalDateTime sentAt) {
-        this.sentAt = sentAt;
-    }
-
-    public LocalDateTime getReadAt() {
-        return readAt;
-    }
-
-    public void setReadAt(LocalDateTime readAt) {
-        this.readAt = readAt;
     }
 }
