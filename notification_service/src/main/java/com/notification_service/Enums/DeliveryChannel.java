@@ -2,11 +2,11 @@ package com.notification_service.Enums;
 
 public enum DeliveryChannel {
 
+    PUSH,
+
     EMAIL,
 
     SMS,
 
-    PUSH,
-
-    IN_APP
+    WEBSOCKET
 }

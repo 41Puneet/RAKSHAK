@@ -18,6 +18,4 @@ public interface NotificationRepository extends JpaRepository<Notification,UUID>
 
    Page <Notification> findByReceiverId(UUID receiverId,Pageable pageable);
 
-        // Duplicate method removed; use the declaration above:
-        // List<Notification> findByReceiverIdAndNotificationStatus(UUID receiverId, NotificationStatus status);
 }

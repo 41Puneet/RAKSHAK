@@ -44,9 +44,7 @@ private NotificationStatus notificationStatus;
 private UUID referenceId;
 @Column(nullable=false)
 private LocalDateTime createdAt;
-@Column(nullable=false)
 private LocalDateTime sentAt;
-@Column(nullable=false)
 private LocalDateTime readAt;
 
 public Notification(){
