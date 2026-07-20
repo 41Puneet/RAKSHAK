@@ -1,8 +1,6 @@
 package com.notification_service.event.RabbitMqConstant;
 
 
- package com.notification_service.Constants;
-
 public final class RabbitMQConstants {
 
     private RabbitMQConstants() {
@@ -19,7 +17,7 @@ public final class RabbitMQConstants {
             "notification.responder.assigned.queue";
 
     public static final String NOTIFICATION_RESPONDER_ARRIVED_QUEUE =
-            "notification.responder.arrived.queue";
+        "notification.responder.arrived.queue";
 
     public static final String NOTIFICATION_HOSPITAL_ASSIGNED_QUEUE =
             "notification.hospital.assigned.queue";

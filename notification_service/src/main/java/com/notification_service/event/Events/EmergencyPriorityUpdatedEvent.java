@@ -1,8 +1,8 @@
-package com.responder_service.event.model;
+package com.notification_service.event.Events;
 
 import java.util.UUID;
-import com.responder_service.Enums.EmergencyType;
-import com.responder_service.Enums.Priority;
+import com.notification_service.Enums.EmergencyType;
+import com.notification_service.Enums.Priority;
 
 public class EmergencyPriorityUpdatedEvent {
 

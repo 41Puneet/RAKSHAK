@@ -9,7 +9,6 @@ import com.notification_service.Entity.NotificationLogs;
 public interface NotificationMapper {
     
 
-
     NotificationResponseDTO toResponseDTO(Notification notification);
     NotificationLogResponseDTO toResponseDTO(NotificationLogs notificationLog);
     Notification toEntity(SendNotificationRequestDTO dto);
