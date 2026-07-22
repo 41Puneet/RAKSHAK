@@ -27,12 +27,6 @@ public class ControlRoomServiceImpl implements ControlRoomService {
         this.mapper = mapper;
     }
 
-    @Override
-    public Page<EmergencyResponseDTO> getAllEmergencies(Pageable pageable) {
-        return emergencyRepository
-                .findAll(pageable)
-                .map(mapper::toResponse);
-    }
 
     @Override
     public Page<EmergencyResponseDTO> getEmergencyByUserId(UUID userId, Pageable pageable) {

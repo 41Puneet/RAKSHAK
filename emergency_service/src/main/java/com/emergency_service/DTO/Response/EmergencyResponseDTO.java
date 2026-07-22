@@ -5,8 +5,7 @@ import java.util.UUID;
 
 import com.emergency_service.Enums.EmergencyType;
 import com.emergency_service.Enums.Priority;
-
-import ch.qos.logback.core.status.Status;
+import com.emergency_service.Enums.Status;
 
 public class EmergencyResponseDTO {
     private UUID emergencyId;

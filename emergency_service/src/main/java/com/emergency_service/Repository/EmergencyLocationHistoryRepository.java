@@ -8,9 +8,9 @@ import java.util.Optional;
 import com.emergency_service.Entity.EmergencyLocationHistory;
 
 public interface EmergencyLocationHistoryRepository extends JpaRepository<EmergencyLocationHistory, UUID> {
-    Optional<EmergencyLocationHistory>findTopByEmergencyRequestEmergencyIdOrderByTimeStampDesc(UUID emergencyId);
+    Optional<EmergencyLocationHistory> findTopByEmergencyRequestEmergencyIdOrderByRecorderAtDesc(UUID emergencyId);
 
-    List<EmergencyLocationHistory>findByEmergencyRequestEmergencyIdOrderByTimeStampAsc(UUID emergencyId);
+    List<EmergencyLocationHistory> findByEmergencyRequestEmergencyIdOrderByRecorderAtAsc(UUID emergencyId);
     
-    void deleteByTimeStampBefore(LocalDateTime time);
+    void deleteByRecorderAtBefore(LocalDateTime time);
 }

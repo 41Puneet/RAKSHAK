@@ -38,7 +38,6 @@ public class EmergencyServiceImpl implements EmergencyService {
     public EmergencyResponseDTO cancelEmergency(UUID emergencyId) {
     EmergencyRequest emergencyRequest = emergencyRepository.findById(emergencyId)
             .orElseThrow(() -> new RuntimeException("Emergency request not found with ID: " + emergencyId));
-    emergencyRequest.setStatus(Status.CANCELLED);
     emergencyRequest.setActive(false);
     emergencyRepository.save(emergencyRequest);
         return emergencyMapper.toResponse(emergencyRequest);

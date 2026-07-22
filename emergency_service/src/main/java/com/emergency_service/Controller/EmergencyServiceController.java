@@ -81,13 +81,7 @@ public class EmergencyServiceController {
 
     // ---------------- CONTROL ROOM APIs ----------------
 
-    @GetMapping
-    public ResponseEntity<Page<EmergencyResponseDTO>> getAllEmergencies(
-            Pageable pageable) {
-
-        return ResponseEntity.ok(
-                controlRoomService.getAllEmergencies(pageable));
-    }
+   
 
     @GetMapping("/status/{status}")
     public ResponseEntity<Page<EmergencyResponseDTO>> getByStatus(

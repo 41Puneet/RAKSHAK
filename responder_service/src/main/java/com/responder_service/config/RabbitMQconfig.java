@@ -14,67 +14,77 @@ import com.responder_service.event.constant.RabbitMQconstant;
 
 @Configuration
 public class RabbitMQconfig {
-    
-    private final TopicExchange EmergencyPriorityUpdatedEvent;
-
-    RabbitMQconfig(TopicExchange EmergencyPriorityUpdatedEvent) {
-        this.EmergencyPriorityUpdatedEvent = EmergencyPriorityUpdatedEvent;
-    }
 
     @Bean
-    public TopicExchange EmergencyPriorityUpdatedEvent(){
+    public TopicExchange emergencyExchange() {
         return new TopicExchange(RabbitMQconstant.EMERGENCY_EXCHANGE);
     }
- 
-    @Bean
-    public Queue EmergencyPriorityUpdatedQueue(){
-        return QueueBuilder.durable(RabbitMQconstant.EMERGENCY_PRIORITY_UPDATED_QUEUE).build();
-    }
 
     @Bean
-    public Binding ResponderUpdatedPriorityBinding(TopicExchange EmergencyPriorityUpdatedEvent,Queue EmergencyPriorityUpdatedQueue){
-        return BindingBuilder.bind(EmergencyPriorityUpdatedQueue)
-                             .to(EmergencyPriorityUpdatedEvent)
-                             .with(RabbitMQconstant.EMERGENCY_PRIORITY_UPDATED_ROUTING_KEY);
-    }
-
-    public MessageConverter messageConverter(){
+    public MessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
     }
- 
+
+    // =======================
+    // Emergency Priority Updated
+    // =======================
+
     @Bean
-    public Queue HospitalAssignedQueue(){
-        return QueueBuilder.durable(RabbitMQconstant.HOSPITAL_ASSIGNED_QUEUE).build();
+    public Queue emergencyPriorityUpdatedQueue() {
+        return QueueBuilder
+                .durable(RabbitMQconstant.EMERGENCY_PRIORITY_UPDATED_QUEUE)
+                .build();
     }
 
     @Bean
-    public Binding HospitalAssignedBinding(TopicExchange EmergencyPriorityUpdatedEvent,Queue HospitalAssignedQueue){
-        return BindingBuilder.bind(HospitalAssignedQueue)
-                             .to(EmergencyPriorityUpdatedEvent)
-                             .with(RabbitMQconstant.HOSPITAL_ASSIGNED_ROUTING_KEY);
-    }
-    @Bean
-    public Queue responderAssignedQueue(){
-        return QueueBuilder.durable(RabbitMQconstant.RESPONDER_ASSIGNED_QUEUE).build();
+    public Binding responderUpdatedPriorityBinding(
+            TopicExchange emergencyExchange,
+            Queue emergencyPriorityUpdatedQueue) {
 
+        return BindingBuilder.bind(emergencyPriorityUpdatedQueue)
+                .to(emergencyExchange)
+                .with(RabbitMQconstant.EMERGENCY_PRIORITY_UPDATED_ROUTING_KEY);
     }
 
-    @Bean
-    public Binding responderAssignedBinding(TopicExchange EmergencyPriorityUpdateEvent,Queue responderAssignedQueue){
-        return BindingBuilder.bind(responderAssignedQueue)
-                             .to(EmergencyPriorityUpdateEvent)
-                             .with(RabbitMQconstant.RESPONDER_ASSIGNED_ROUTING_KEY);
-    }
+    // =======================
+    // Hospital Assigned
+    // =======================
 
     @Bean
-    public Queue locationUpdatedQueue(){
-        return QueueBuilder.durable(RabbitMQconstant.LOCATION_UPDATE_QUEUE).build();
+    public Queue hospitalAssignedQueue() {
+        return QueueBuilder
+                .durable(RabbitMQconstant.HOSPITAL_ASSIGNED_QUEUE)
+                .build();
     }
 
     @Bean
-    public Binding locationUpdateBinding(TopicExchange EmergencyPriorityUpdatedEvent,Queue locationUpdatedQueue){
+    public Binding hospitalAssignedBinding(
+            TopicExchange emergencyExchange,
+            Queue hospitalAssignedQueue) {
+
+        return BindingBuilder.bind(hospitalAssignedQueue)
+                .to(emergencyExchange)
+                .with(RabbitMQconstant.HOSPITAL_ASSIGNED_ROUTING_KEY);
+    }
+
+    // =======================
+    // Location Updated
+    // =======================
+
+    @Bean
+    public Queue locationUpdatedQueue() {
+        return QueueBuilder
+                .durable(RabbitMQconstant.LOCATION_UPDATE_QUEUE)
+                .build();
+    }
+
+    @Bean
+    public Binding locationUpdateBinding(
+            TopicExchange emergencyExchange,
+            Queue locationUpdatedQueue) {
+
         return BindingBuilder.bind(locationUpdatedQueue)
-                             .to(EmergencyPriorityUpdatedEvent)
-                             .with(RabbitMQconstant.LOCATION_UPDATED_ROUTING_KEY);
+                .to(emergencyExchange)
+                .with(RabbitMQconstant.LOCATION_UPDATED_ROUTING_KEY);
     }
 }

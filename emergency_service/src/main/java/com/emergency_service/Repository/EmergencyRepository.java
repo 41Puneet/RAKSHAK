@@ -38,6 +38,5 @@ AND e.isActive=true
 """)
 Optional<EmergencyRequest> findActiveEmergency(UUID userId);
 
-Page<EmergencyRequest>getAllEmergency(Pageable pageable);
 Page<EmergencyRequest> findByResponderId(UUID responderId, Pageable pageable);
 }

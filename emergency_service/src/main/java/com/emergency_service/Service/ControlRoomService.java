@@ -26,5 +26,5 @@ public interface ControlRoomService {
 
      Page<EmergencyResponseDTO> getEmergencyByResponderId(UUID responderId,Pageable pageable);
 
-    Page<EmergencyResponseDTO> getAllEmergencies(Pageable pageable);
+    
 }

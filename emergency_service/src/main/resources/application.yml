@@ -1,15 +1,19 @@
 server:
-  port: 8082
+  port: 8083
 
 spring:
   application:
     name: EMERGENCY-SERVICE
 
+  autoconfigure:
+    exclude:
+      - org.springframework.ai.model.chat.memory.redis.autoconfigure.RedisChatMemoryAutoConfiguration
+
   datasource:
-    url: jdbc:mysql://localhost:3306/emergency_db?createDatabaseIfNotExist=true
-    username: root
-    password: p1u2n3e4e5t6
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL:jdbc:h2:file:./data/emergency_db}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
+    driver-class-name: ${DB_DRIVER:org.h2.Driver}
 
   jpa:
     hibernate:
@@ -34,12 +38,12 @@ jwt:
   secret: ifernenp39u424r9nfq29f4891fuxf4c981h8hzbfyxyq34bxfr
   expiration: 3600000
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    prefer-ip-address: true
+# eureka:
+#   client:
+#     service-url:
+#       defaultZone: http://localhost:8761/eureka/
+#   instance:
+#     prefer-ip-address: true
 
 resilience4j:
   circuitbreaker:

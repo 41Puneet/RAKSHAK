@@ -6,6 +6,8 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import com.responder_service.Entity.Responder;
 import com.responder_service.Enums.AvailabilityStatus;
 import com.responder_service.Enums.DutyStatus;
@@ -21,7 +23,7 @@ public interface ResponderRepository extends JpaRepository<Responder, UUID> {
 
     boolean existsByUserId(UUID userId);
 
-    Page<Responder> findByType(ResponderType type, Pageable pageable);
+    Page<Responder> findByResponderType(ResponderType responderType, Pageable pageable);
 
     Page<Responder> findByStatus(AvailabilityStatus status, Pageable pageable);
 
@@ -29,8 +31,8 @@ public interface ResponderRepository extends JpaRepository<Responder, UUID> {
 
     Page<Responder> findByActive(boolean active, Pageable pageable);
 
-    Page<Responder> findByTypeAndStatusAndDutyStatusAndActive(
-            ResponderType type,
+    Page<Responder> findByResponderTypeAndStatusAndDutyStatusAndActive(
+            ResponderType responderType,
             AvailabilityStatus status,
             DutyStatus dutyStatus,
             boolean active,
@@ -41,5 +43,6 @@ public interface ResponderRepository extends JpaRepository<Responder, UUID> {
             LocalDateTime end,
             Pageable pageable);
 
-     Responder findByResponderId(UUID responderId);
+    @Query("select r from Responder r where r.id = :responderId")
+    Responder findByResponderId(@Param("responderId") UUID responderId);
 }
