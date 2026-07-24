@@ -1,5 +1,5 @@
 server:
-  port: 8087
+  port: ${PORT:8087}
 
 spring:
   application:
@@ -10,20 +10,23 @@ spring:
       - org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration
 
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+
+jwt:
+  secret: ${JWT_SECRET:cmFrc2hhay1kZXYta2V5LW5vdC1mb3ItcHJvZA==}
 
 openroute:
-  api-key: eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjU2ZjkyYjg0ZjRmMjQ2MTdhN2QzZjliODQ5MDA2Y2U4IiwiaCI6Im11cm11cjY0In0=
-  url: https://api.openrouteservice.org/v2/directions/driving-car/geojson
+  api-key: ${OPENROUTE_API_KEY:}
+  url: ${OPENROUTE_URL:https://api.openrouteservice.org/v2/directions/driving-car/geojson}
 
 eureka:
   client:
     enabled: false
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
 
 
 overpass:

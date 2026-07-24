@@ -39,6 +39,8 @@ public class EmergencyServiceImpl implements EmergencyService {
     EmergencyRequest emergencyRequest = emergencyRepository.findById(emergencyId)
             .orElseThrow(() -> new RuntimeException("Emergency request not found with ID: " + emergencyId));
     emergencyRequest.setActive(false);
+    emergencyRequest.setStatus(Status.CANCELLED);
+    emergencyRequest.setUpdatedAt(LocalDateTime.now());
     emergencyRepository.save(emergencyRequest);
         return emergencyMapper.toResponse(emergencyRequest);
     }
@@ -79,12 +81,9 @@ emergencyEventProducer.publishEmergencyCreated(event);
 
     @Override
     public EmergencyResponseDTO getEmergencyById(UUID emergencyId) {
-        Optional<EmergencyRequest> emergencyRequest = emergencyRepository.findById(emergencyId);
-        if (emergencyRequest.isPresent()) {
-            return emergencyMapper.toResponse(emergencyRequest.get());
-        }
-
-        return null;
+        EmergencyRequest emergencyRequest = emergencyRepository.findById(emergencyId)
+                .orElseThrow(() -> new IllegalArgumentException("Emergency request not found with ID: " + emergencyId));
+        return emergencyMapper.toResponse(emergencyRequest);
     }
 
     @Override
@@ -112,4 +111,3 @@ emergencyEventProducer.publishEmergencyCreated(event);
     }
     
 }
-

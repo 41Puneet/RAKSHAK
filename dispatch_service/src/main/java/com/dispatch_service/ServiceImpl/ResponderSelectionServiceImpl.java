@@ -3,6 +3,8 @@ package com.dispatch_service.ServiceImpl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dispatch_service.Entity.ResponderLocation;
 import com.dispatch_service.Repository.ResponderLocationRepository;
@@ -12,6 +14,7 @@ import com.dispatch_service.Service.ResponderSelectionService;
 
 @Service
 public class ResponderSelectionServiceImpl implements ResponderSelectionService {
+    private static final Logger log=LoggerFactory.getLogger(ResponderSelectionServiceImpl.class);
     private static final double SEARCH_RADIUS_KM=25.0;
     private static final double KM_PER_DEGREE=111.0;
     private final GeoService geoService;
@@ -25,7 +28,7 @@ public class ResponderSelectionServiceImpl implements ResponderSelectionService 
     @Override
 public ResponderLocation findNearestAvailableResponder(Double latitude, Double longitude) {
 
-    System.out.println("Emergency Location : " + latitude + "," + longitude);
+    log.debug("Selecting responder for emergency location {},{}", latitude, longitude);
 
     double latDelta = SEARCH_RADIUS_KM / KM_PER_DEGREE;
     double lonDelta = SEARCH_RADIUS_KM /
@@ -37,11 +40,6 @@ public ResponderLocation findNearestAvailableResponder(Double latitude, Double l
     double minLon = longitude - lonDelta;
     double maxLon = longitude + lonDelta;
 
-    System.out.println("Bounding Box");
-    System.out.println(minLat);
-    System.out.println(maxLat);
-    System.out.println(minLon);
-    System.out.println(maxLon);
 
     List<ResponderLocation> availableResponder =
             responderLocationRepository.findAvailableRespondersInBoundingBox(
@@ -50,7 +48,7 @@ public ResponderLocation findNearestAvailableResponder(Double latitude, Double l
                     minLon,
                     maxLon);
 
-    System.out.println("Responders Found : " + availableResponder.size());
+    log.debug("Responders found in bounding box: {}", availableResponder.size());
 
     if (availableResponder.isEmpty()) {
         return null;
@@ -67,8 +65,7 @@ public ResponderLocation findNearestAvailableResponder(Double latitude, Double l
                 responder.getLatitude(),
                 responder.getLongitude());
 
-        System.out.println(
-                responder.getResponderId() + " distance = " + distance);
+        log.trace("Responder {} distance = {}", responder.getResponderId(), distance);
 
         if (distance < bestDistance) {
             bestDistance = distance;
@@ -76,7 +73,7 @@ public ResponderLocation findNearestAvailableResponder(Double latitude, Double l
         }
     }
 
-    System.out.println("Selected : " + bestResponder.getResponderId());
+    log.debug("Selected responder {}", bestResponder.getResponderId());
 
     return bestResponder;
 }

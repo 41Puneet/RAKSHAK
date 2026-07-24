@@ -1,9 +1,9 @@
-package com.responder_service.event.model;
+package com.notification_service.event.Events;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.responder_service.Enums.EntityType;
+import com.notification_service.Enums.EntityType;
 
 public class LocationUpdatedEvent {
     

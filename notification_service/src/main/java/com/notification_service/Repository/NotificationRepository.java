@@ -18,4 +18,8 @@ public interface NotificationRepository extends JpaRepository<Notification,UUID>
 
    Page <Notification> findByReceiverId(UUID receiverId,Pageable pageable);
 
+   long countByReceiverId(UUID receiverId);
+   long countByReceiverIdAndNotificationStatus(UUID receiverId, NotificationStatus status);
+   boolean existsByReferenceIdAndNotificationType(UUID referenceId, com.notification_service.Enums.NotificationType type);
+
 }

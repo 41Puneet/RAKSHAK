@@ -28,7 +28,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> registerUser(@RequestBody @Valid RegisterRequest registerRequest){
-        System.out.println("REGISTER CONTROLLER HIT");
         return new ResponseEntity<>(authService.registerUser(registerRequest), HttpStatus.CREATED);
     }
     @PostMapping("/logout")

@@ -1,0 +1,93 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-rakshak}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME:-rakshak}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?Set RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  service-registry:
+    build: ./service_registry
+    ports: ["8761:8761"]
+    depends_on: {postgres: {condition: service_healthy}}
+  auth-service:
+    build: ./auth_service
+    ports: ["8081:8081"]
+    environment: {DB_URL: "jdbc:postgresql://postgres:5432/auth_service", DB_USERNAME: "${POSTGRES_USER:-rakshak}", DB_PASSWORD: "${POSTGRES_PASSWORD:-testpass}", JWT_SECRET: "${JWT_SECRET:-change-me}"}
+    depends_on: {postgres: {condition: service_healthy}, service-registry: {condition: service_started}}
+  emergency-service:
+    build: ./emergency_service
+    ports: ["8083:8083"]
+    environment: {DB_URL: "jdbc:postgresql://postgres:5432/emergency_service", DB_USERNAME: "${POSTGRES_USER:-rakshak}", DB_PASSWORD: "${POSTGRES_PASSWORD:-testpass}", RABBITMQ_HOST: rabbitmq, RABBITMQ_USERNAME: "${RABBITMQ_USERNAME:-rakshak}", RABBITMQ_PASSWORD: "${RABBITMQ_PASSWORD:-testpass}", JWT_SECRET: "${JWT_SECRET:-change-me}"}
+    depends_on: {postgres: {condition: service_healthy}, rabbitmq: {condition: service_healthy}, service-registry: {condition: service_started}}
+  dispatch-service:
+    build: ./dispatch_service
+    ports: ["8082:8082"]
+    environment: {DB_URL: "jdbc:postgresql://postgres:5432/emergency_service", DB_USERNAME: "${POSTGRES_USER:-rakshak}", DB_PASSWORD: "${POSTGRES_PASSWORD:-testpass}", RABBITMQ_HOST: rabbitmq, RABBITMQ_USERNAME: "${RABBITMQ_USERNAME:-rakshak}", RABBITMQ_PASSWORD: "${RABBITMQ_PASSWORD:-testpass}", JWT_SECRET: "${JWT_SECRET:-change-me}"}
+    depends_on: {postgres: {condition: service_healthy}, rabbitmq: {condition: service_healthy}, service-registry: {condition: service_started}}
+  responder-service:
+    build: ./responder_service
+    ports: ["9090:9090"]
+    environment: {DB_URL: "jdbc:postgresql://postgres:5432/rakshak_responder_db", DB_USERNAME: "${POSTGRES_USER:-rakshak}", DB_PASSWORD: "${POSTGRES_PASSWORD:-testpass}", RABBITMQ_HOST: rabbitmq, RABBITMQ_USERNAME: "${RABBITMQ_USERNAME:-rakshak}", RABBITMQ_PASSWORD: "${RABBITMQ_PASSWORD:-testpass}", JWT_SECRET: "${JWT_SECRET:-change-me}"}
+    depends_on: {postgres: {condition: service_healthy}, rabbitmq: {condition: service_healthy}, redis: {condition: service_healthy}}
+  tracking-service:
+    build: ./tracking_service
+    ports: ["8084:8084"]
+    environment: {DB_URL: "jdbc:postgresql://postgres:5432/tracking_service", DB_USERNAME: "${POSTGRES_USER:-rakshak}", DB_PASSWORD: "${POSTGRES_PASSWORD:-testpass}", RABBITMQ_HOST: rabbitmq, RABBITMQ_USERNAME: "${RABBITMQ_USERNAME:-rakshak}", RABBITMQ_PASSWORD: "${RABBITMQ_PASSWORD:-testpass}", JWT_SECRET: "${JWT_SECRET:-change-me}"}
+    depends_on: {postgres: {condition: service_healthy}, rabbitmq: {condition: service_healthy}}
+  notification-service:
+    build: ./notification_service
+    ports: ["8086:8086"]
+    environment: {DB_URL: "jdbc:postgresql://postgres:5432/notification_service", DB_USERNAME: "${POSTGRES_USER:-rakshak}", DB_PASSWORD: "${POSTGRES_PASSWORD:-testpass}", RABBITMQ_HOST: rabbitmq, RABBITMQ_USERNAME: "${RABBITMQ_USERNAME:-rakshak}", RABBITMQ_PASSWORD: "${RABBITMQ_PASSWORD:-testpass}", JWT_SECRET: "${JWT_SECRET:-change-me}"}
+    depends_on: {postgres: {condition: service_healthy}, rabbitmq: {condition: service_healthy}}
+  hospital-service:
+    build: ./hospital_service
+    ports: ["8087:8087"]
+    environment: {RABBITMQ_HOST: rabbitmq, RABBITMQ_USERNAME: "${RABBITMQ_USERNAME:-rakshak}", RABBITMQ_PASSWORD: "${RABBITMQ_PASSWORD:-testpass}", JWT_SECRET: "${JWT_SECRET:-change-me}", OPENROUTE_API_KEY: "${OPENROUTE_API_KEY:-}"}
+    depends_on: {rabbitmq: {condition: service_healthy}}
+  api-gateway:
+    build: ./api_gateway
+    ports: ["8080:8080"]
+    depends_on: {service-registry: {condition: service_started}}
+
+volumes:
+  postgres-data:
+  rabbitmq-data:
+  redis-data:

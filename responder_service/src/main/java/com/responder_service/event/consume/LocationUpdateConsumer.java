@@ -1,6 +1,7 @@
 package com.responder_service.event.consume;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 
 import com.responder_service.Entity.Responder;
@@ -19,13 +20,17 @@ public class LocationUpdateConsumer {
     }
 
     @RabbitListener(queues=RabbitMQconstant.LOCATION_UPDATE_QUEUE)
+    @CacheEvict(cacheNames = {"responderById", "latestResponderLocation"}, key = "#event.entityId")
     public void locationUpdateConsumer(LocationUpdatedEvent event){
        if(event.getEntityType()!=EntityType.RESPONDER){
         return;
        }
        Responder responder=repository.findByResponderId(event.getEntityId());
+       if (responder == null) {
+        return;
+       }
        responder.setLatitude(event.getLatitude());
        responder.setLongitude(event.getLongitude());
-       
+       repository.save(responder);
     }
 }

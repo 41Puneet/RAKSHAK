@@ -3,6 +3,7 @@ package com.tracking_service.Controller;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Controller;
+import jakarta.validation.Valid;
 import com.tracking_service.DTO.Request.LocationUpdateRequest;
 import com.tracking_service.Service.TrackingService;
 
@@ -16,7 +17,7 @@ public class TrackingWebSocketController {
     }
 
     @MessageMapping("/location/update")
-    public void updateLocation(@Payload LocationUpdateRequest request) {
+    public void updateLocation(@Valid @Payload LocationUpdateRequest request) {
 
         trackingService.processLocationUpdate(request);
 

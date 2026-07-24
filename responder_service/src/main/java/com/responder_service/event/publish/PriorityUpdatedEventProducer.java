@@ -4,6 +4,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
 import com.responder_service.event.constant.RabbitMQconstant;
+import java.util.UUID;
 import com.responder_service.event.model.EmergencyPriorityUpdatedEvent;
 
 @Component
@@ -16,6 +17,7 @@ public class PriorityUpdatedEventProducer {
     }
 
     public void publishPriorityUpdatedEvent(EmergencyPriorityUpdatedEvent event){
-        rabbitTemplate.convertAndSend(RabbitMQconstant.EMERGENCY_EXCHANGE,RabbitMQconstant.EMERGENCY_PRIORITY_UPDATED_ROUTING_KEY,event);
+        rabbitTemplate.convertAndSend(RabbitMQconstant.EMERGENCY_EXCHANGE,RabbitMQconstant.EMERGENCY_PRIORITY_UPDATED_ROUTING_KEY,event,
+                message -> { message.getMessageProperties().setCorrelationId(UUID.randomUUID().toString()); return message; });
     }
 }

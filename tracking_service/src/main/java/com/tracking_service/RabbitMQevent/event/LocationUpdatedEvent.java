@@ -3,7 +3,7 @@ package com.tracking_service.RabbitMQevent.event;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.hibernate.type.EntityType;
+import com.tracking_service.Enum.EntityType;
 
 
 public class LocationUpdatedEvent {

@@ -1,5 +1,5 @@
 server:
-  port: 8084
+  port: ${PORT:8084}
 
 spring:
   application:
@@ -14,7 +14,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     open-in-view: false
     properties:
       hibernate:
@@ -22,16 +22,19 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
 
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+
+jwt:
+  secret: ${JWT_SECRET:cmFrc2hhay1kZXYta2V5LW5vdC1mb3ItcHJvZA==}
 
 eureka:
   client:
     enabled: false
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
     register-with-eureka: false
     fetch-registry: false
 
@@ -47,3 +50,6 @@ logging:
     org.springframework.web: INFO
     org.springframework.amqp: INFO
     com.tracking_service: DEBUG
+
+tracking:
+  allowed-origins: ${TRACKING_ALLOWED_ORIGINS:http://localhost:3000}

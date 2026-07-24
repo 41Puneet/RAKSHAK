@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import com.responder_service.DTO.request.AssignResponderRequest;
 import com.responder_service.DTO.request.CompleteAssignmentRequest;
 import com.responder_service.DTO.request.CreateResponderRequest;
@@ -94,6 +96,7 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
     }
 
     @Override
+    @CacheEvict(cacheNames = {"responderById", "vehicleByResponder", "latestResponderLocation"}, allEntries = true)
     public AssignmentResponse completeAssignment(CompleteAssignmentRequest request) {
         Optional<ResponderAssignment> assignment = assignmentRepository.findById(request.getId());
         if (assignment.isPresent()) {
@@ -110,6 +113,7 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
     }
 
     @Override
+    @CacheEvict(cacheNames = {"responderById", "vehicleByResponder"}, allEntries = true)
     public ResponderResponse createResponder(CreateResponderRequest request) {
        Optional<Responder> responder1 = responderRepository.findByUserId(request.getUserId());
        if (responder1.isPresent()) {
@@ -131,6 +135,7 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
     }
 
     @Override
+    @CacheEvict(cacheNames = {"responderById", "vehicleByResponder", "latestResponderLocation"}, allEntries = true)
     public void deleteResponder(UUID responderId) {
         Optional<Responder> responder = responderRepository.findById(responderId);
        if(responder.isPresent()){
@@ -142,6 +147,7 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
     }
 
     @Override
+    @CacheEvict(cacheNames = {"vehicleById", "vehicleByResponder"}, allEntries = true)
     public void deleteVehicle(UUID vehicleId) {
        Optional<ResponderVehicle>vehicle=vehicleRepository.findById(vehicleId);
        if(vehicle.isPresent()){
@@ -175,7 +181,7 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
 
     @Override
     public Page<VehicleResponse> getByActiveVehicle(boolean active, Pageable pageable) {
-       Page<ResponderVehicle>vehicle=vehicleRepository.findByActive(true, pageable);
+       Page<ResponderVehicle>vehicle=vehicleRepository.findByActive(active, pageable);
        return vehicle.map(mapper::toVehicleResponse);
     }
 
@@ -186,6 +192,7 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
     }
 
     @Override
+    @Cacheable(cacheNames = "latestResponderLocation", key = "#responderId")
     public LocationHistoryResponse getByResponderIdAndTime(UUID responderId) {
         Optional<ResponderLocationHistory>location=locationRepository.findTopByResponder_IdOrderByTimestampDesc(responderId);
         return mapper.toResponderLocationResponse(location.get());
@@ -204,6 +211,7 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
     }
 
     @Override
+    @Cacheable(cacheNames = "responderById", key = "#responderId")
     public ResponderResponse getResponderByID(UUID responderId) {
        Responder responder=responderRepository.findByResponderId(responderId);
        if(responder!=null){
@@ -213,6 +221,7 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
     }
 
     @Override
+    @Cacheable(cacheNames = "vehicleById", key = "#vehicleId")
     public VehicleResponse getVehicleByID(UUID vehicleId) {
         Optional<ResponderVehicle>vehicle=vehicleRepository.findById(vehicleId);
         if(vehicle.isPresent()){
@@ -222,6 +231,7 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
     }
 
     @Override
+    @Cacheable(cacheNames = "vehicleByResponder", key = "#responderId")
     public VehicleResponse getVehicleByResponder(UUID responderId) {
         Optional<ResponderVehicle> vehicle=vehicleRepository.findByResponder_Id(responderId);
         if(vehicle.isPresent()){
@@ -231,6 +241,7 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
     }
 
     @Override
+    @CacheEvict(cacheNames = {"vehicleById", "vehicleByResponder"}, allEntries = true)
     public VehicleResponse registerVehicle(RegisterVehicleRequest request) {
         Optional<ResponderVehicle>vehicle=vehicleRepository.findByVehicleNumber(request.getVehicleNumber());
         if(vehicle.isPresent()){
@@ -244,6 +255,7 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
     }
 
     @Override
+    @CacheEvict(cacheNames = {"responderById", "latestResponderLocation"}, allEntries = true)
     public AvailabilityHistoryResponse updateAvailability(UpdateAvailabilityRequest request, UUID responderId) {
         Optional<ResponderAvailabilityHistory> availability = availabilityRepository.findTopByResponder_IdOrderByChangedAtDesc(responderId);
         if (availability.isPresent()) {
@@ -259,6 +271,7 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
     }
 
     @Override
+    @CacheEvict(cacheNames = {"responderById", "vehicleByResponder"}, allEntries = true)
     public ResponderResponse updateResponder(UUID responderId, UpdateResponder request) {
        Responder responder=responderRepository.findByResponderId(responderId);
        if(responder!=null){
@@ -271,6 +284,7 @@ public ResponderServiceImpl(ResponderAssignmentRepository assignmentRepository, 
     }
 
     @Override
+    @CacheEvict(cacheNames = {"vehicleById", "vehicleByResponder"}, allEntries = true)
     public VehicleResponse updateVehicle(UUID vehicleId, UpdateVehicleRequest request) {
         Optional<ResponderVehicle> vehicle=vehicleRepository.findById(vehicleId);
         if(vehicle.isEmpty()){

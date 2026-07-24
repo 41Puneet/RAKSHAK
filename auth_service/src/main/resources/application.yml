@@ -1,22 +1,22 @@
 
 server:
-  port: 8081
+  port: ${PORT:8081}
 
 spring:
   application:
     name: auth-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/auth_service
-    username: puneetagnihotri
-    password:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/auth_service}
+    username: ${DB_USERNAME:puneetagnihotri}
+    password: ${DB_PASSWORD:}
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
 
-    show-sql: true
+    show-sql: false
 
     properties:
       hibernate:
@@ -28,7 +28,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
 
 management:
   endpoints:
@@ -37,9 +37,9 @@ management:
         include: health,info
 
 jwt:
-  secret: bgeurb2389234bfeurbq4b24ubqfqu34b332nfewugiw942infwuirt4301ej
-  access-token-expiration: 900000
-  refresh-token-expiration: 604800000
+  secret: ${JWT_SECRET:}
+  access-token-expiration: ${JWT_ACCESS_EXPIRATION:900000}
+  refresh-token-expiration: ${JWT_REFRESH_EXPIRATION:604800000}
 
 
 

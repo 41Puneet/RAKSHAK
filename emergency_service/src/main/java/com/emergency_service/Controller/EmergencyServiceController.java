@@ -18,8 +18,13 @@ import com.emergency_service.Enums.Priority;
 import com.emergency_service.Enums.Status;
 
 import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
-@RestController
+@RestController @Tag(name="Emergencies") @SecurityRequirement(name="bearerAuth")
 @RequestMapping("/api/emergencies")
 public class EmergencyServiceController {
 
@@ -34,9 +39,12 @@ public class EmergencyServiceController {
 
     // Create Emergency
     @PostMapping
+    @Operation(summary="Create an emergency")
     public ResponseEntity<EmergencyResponseDTO> createEmergency(
             @Valid @RequestBody EmergencyRequestDTO dto,
-            @RequestHeader("X-User-Id") UUID userId) {
+            @AuthenticationPrincipal Jwt jwt) {
+
+        UUID userId = UUID.fromString(jwt.getClaimAsString("userId"));
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(emergencyService.createEmergency(dto, userId));
@@ -44,6 +52,7 @@ public class EmergencyServiceController {
 
     // Cancel Emergency
     @PutMapping("/{emergencyId}/cancel")
+    @Operation(summary="Cancel an emergency")
     public ResponseEntity<EmergencyResponseDTO> cancelEmergency(
             @PathVariable UUID emergencyId) {
 
@@ -73,7 +82,9 @@ public class EmergencyServiceController {
     // Get Active Emergency Of User
     @GetMapping("/active")
     public ResponseEntity<EmergencyResponseDTO> getActiveEmergency(
-            @RequestHeader("X-User-Id") UUID userId) {
+            @AuthenticationPrincipal Jwt jwt) {
+
+        UUID userId = UUID.fromString(jwt.getClaimAsString("userId"));
 
         return ResponseEntity.ok(
                 emergencyService.getActiveEmergencyByUserId(userId));

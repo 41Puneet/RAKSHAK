@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.emergency_service.event.constant.RabbitMQconstant;
 import com.emergency_service.event.model.EmergencyCreatedEvent;
+import java.util.UUID;
 
 @Component
 public class EmergencyEventProducer{
@@ -19,6 +20,7 @@ public class EmergencyEventProducer{
     }
 
     public void publishEmergencyCreated(EmergencyCreatedEvent event){
-   rabbitTemplate.convertAndSend(RabbitMQconstant.EMERGENCY_EXCHANGE, RabbitMQconstant.EMERGENCY_CREATED_ROUTING_KEY, event);
+   rabbitTemplate.convertAndSend(RabbitMQconstant.EMERGENCY_EXCHANGE, RabbitMQconstant.EMERGENCY_CREATED_ROUTING_KEY, event,
+           message -> { message.getMessageProperties().setCorrelationId(UUID.randomUUID().toString()); return message; });
     }
 }

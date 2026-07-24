@@ -95,9 +95,6 @@ public AuthServiceImpl(UserRepository userRepository,AuthenticationManager authe
        user1.setAccountStatus(AccountStatus.ACTIVE);
        user1.setProfileImageUrl(registerRequest.getProfileImageUrl());
        User saved=userRepository.save(user1);
-       System.out.println(registerRequest.getEmail());
-System.out.println(registerRequest.getPhoneNumber());
-System.out.println(registerRequest.getRole());
         return mapToResponseDTO(saved);
 
     }

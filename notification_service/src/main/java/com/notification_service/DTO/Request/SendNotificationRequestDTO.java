@@ -8,7 +8,9 @@ import com.notification_service.Enums.ReceiverType;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(description="Notification request")
 public class SendNotificationRequestDTO {
 
     @NotNull(message = "receiverId is required")
@@ -18,9 +20,11 @@ public class SendNotificationRequestDTO {
     private ReceiverType receiverType;
 
     @NotBlank(message = "title is required")
+    @jakarta.validation.constraints.Size(max = 160)
     private String title;
 
     @NotBlank(message = "message is required")
+    @jakarta.validation.constraints.Size(max = 4000)
     private String message;
 
     @NotNull(message = "notificationType is required")

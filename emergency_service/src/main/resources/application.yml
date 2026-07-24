@@ -1,5 +1,5 @@
 server:
-  port: 8083
+  port: ${PORT:8083}
 
 spring:
   application:
@@ -10,40 +10,43 @@ spring:
       - org.springframework.ai.model.chat.memory.redis.autoconfigure.RedisChatMemoryAutoConfiguration
 
   datasource:
-    url: ${DB_URL:jdbc:h2:file:./data/emergency_db}
-    username: ${DB_USERNAME:sa}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/emergency_service}
+    username: ${DB_USERNAME:puneetagnihotri}
     password: ${DB_PASSWORD:}
-    driver-class-name: ${DB_DRIVER:org.h2.Driver}
+    driver-class-name: ${DB_DRIVER:org.postgresql.Driver}
 
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
 
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
 
   data:
     redis:
       host: localhost
       port: 6379
 
-jwt:
-  secret: ifernenp39u424r9nfq29f4891fuxf4c981h8hzbfyxyq34bxfr
-  expiration: 3600000
+  data.web.pageable.max-page-size: 100
+  data.web.pageable.default-page-size: 25
 
-# eureka:
-#   client:
-#     service-url:
-#       defaultZone: http://localhost:8761/eureka/
-#   instance:
-#     prefer-ip-address: true
+jwt:
+  secret: ${JWT_SECRET:cmFrc2hhay1kZXYta2V5LW5vdC1mb3ItcHJvZA==}
+  expiration: ${JWT_EXPIRATION:3600000}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+  instance:
+    prefer-ip-address: true
 
 resilience4j:
   circuitbreaker:

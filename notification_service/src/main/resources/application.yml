@@ -1,44 +1,38 @@
 server:
-  port: 8086
+  port: ${PORT:8086}
 
 spring:
   application:
     name: notification-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/notification_service
-    username: postgres
-    password: root
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/notification_service}
+    username: ${DB_USERNAME:puneetagnihotri}
+    password: ${DB_PASSWORD:}
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
 
-  kafka:
-    bootstrap-servers: localhost:9092
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    listener:
+      simple:
+        acknowledge-mode: auto
 
-    consumer:
-      group-id: notification-group
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-
-      properties:
-        spring:
-          json:
-            trusted:
-              packages: "*"
-
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  data.web.pageable.max-page-size: 100
+  data.web.pageable.default-page-size: 25
 
   mail:
     host: smtp.gmail.com
     port: 587
-    username: your-email@gmail.com
-    password: app-password
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
 
     properties:
       mail:
@@ -50,10 +44,13 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
 
 management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: health,info,metrics,prometheus
+
+jwt:
+  secret: ${JWT_SECRET:cmFrc2hhay1kZXYta2V5LW5vdC1mb3ItcHJvZA==}

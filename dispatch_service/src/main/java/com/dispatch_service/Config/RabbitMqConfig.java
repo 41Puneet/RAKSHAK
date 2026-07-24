@@ -61,8 +61,9 @@ public Queue locationUpdatedQueue(){
     return QueueBuilder.durable(RabbitMqConstant.LOCATION_UPDATE_QUEUE).build();
 }
 
+@Bean
 public Binding locationUpdateBinding(Queue locationUpdatedQueue,TopicExchange emergencyExchange){
-    return BindingBuilder.bind(locationUpdatedQueue())
+    return BindingBuilder.bind(locationUpdatedQueue)
                          .to(emergencyExchange)
                          .with(RabbitMqConstant.LOCATION_UPDATED_ROUTING_KEY);
 }

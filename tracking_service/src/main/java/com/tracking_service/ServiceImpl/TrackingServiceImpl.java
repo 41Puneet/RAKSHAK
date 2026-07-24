@@ -2,6 +2,7 @@ package com.tracking_service.ServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import com.tracking_service.exception.LocationNotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,7 +100,7 @@ public class TrackingServiceImpl implements TrackingService {
                 currentRepository.findByEntityId(entityId);
 
         if (location == null) {
-            throw new RuntimeException("Location not found");
+            throw new LocationNotFoundException("Location not found for entity " + entityId);
         }
 
         return mapper.toLocationResponse(location);

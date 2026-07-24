@@ -7,6 +7,8 @@ import java.util.UUID;
 import com.tracking_service.Enum.EntityType;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 
 
 
@@ -19,9 +21,13 @@ public class LocationUpdateRequest {
     private EntityType entityType;
 
     @NotNull(message = "Latitude is required")
+    @DecimalMin(value = "-90.0")
+    @DecimalMax(value = "90.0")
     private Double latitude;
 
     @NotNull(message = "Longitude is required")
+    @DecimalMin(value = "-180.0")
+    @DecimalMax(value = "180.0")
     private Double longitude;
 
     @NotNull(message = "Timestamp is required")

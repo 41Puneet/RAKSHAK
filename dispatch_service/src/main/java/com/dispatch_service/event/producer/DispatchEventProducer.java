@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.dispatch_service.event.Constant.RabbitMqConstant;
 import com.dispatch_service.event.model.ResponderAssignedEvent;
+import java.util.UUID;
 
 @Component
 public class DispatchEventProducer {
@@ -20,8 +21,8 @@ public class DispatchEventProducer {
         rabbitTemplate.convertAndSend(
                 RabbitMqConstant.EMERGENCY_EXCHANGE,
                 RabbitMqConstant.RESPONDER_ASSIGNED_ROUTING_KEY,
-                event
+                event,
+                message -> { message.getMessageProperties().setCorrelationId(UUID.randomUUID().toString()); return message; }
         );
-        System.out.println("Publishing responder assigned event: " + event);
     }
 }

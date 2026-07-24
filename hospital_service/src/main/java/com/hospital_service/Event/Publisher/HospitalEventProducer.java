@@ -4,6 +4,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
 import com.hospital_service.Event.RabbitMqConstant.RabbitMQconstant;
+import java.util.UUID;
 import com.hospital_service.Event.event.HospitalSelectionEvent;
 
 @Component
@@ -17,7 +18,8 @@ public class HospitalEventProducer {
     }
 
     public void publishHospitalEvent(HospitalSelectionEvent event){
-        rabbitTemplate.convertAndSend(RabbitMQconstant.EMERGENCY_EXCHANGE, RabbitMQconstant.HOSPITAL_ASSIGNED_ROUTING_KEY, event);
+        rabbitTemplate.convertAndSend(RabbitMQconstant.EMERGENCY_EXCHANGE, RabbitMQconstant.HOSPITAL_ASSIGNED_ROUTING_KEY, event,
+                message -> { message.getMessageProperties().setCorrelationId(UUID.randomUUID().toString()); return message; });
     }
 
 }
